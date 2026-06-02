@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mariana Di Falcco — Agenda Astral</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;500;600&family=Cinzel+Decorative:wght@400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0818;--bg2:#14102a;--bg3:#1e1840;--card:#181430;--card2:#221e3c;
+  --gold:#f0c040;--gold2:#d4a030;--gold3:#a87020;
+  --text:#f0ecff;--text2:#c0b0e8;--text3:#806898;
+  --border:#4a3880;--bsoft:#2e2258;
+  --c-mapa:#b060ff;--c-solar:#ffb020;--c-sinastria:#ff4d94;
+  --c-tarot:#ff4444;--c-cigano:#ff7820;--c-sibilla:#00d0f0;--c-geral:#00c880;
+  --c-blocked:#556070;
+  --m-nova:rgba(80,60,180,.22);--m-crescente:rgba(0,180,80,.16);
+  --m-cheia:rgba(240,192,64,.20);--m-minguante:rgba(160,60,220,.18);
+  --shadow:rgba(0,0,0,.5);--fs:22px;
+}
+body{font-family:'Cormorant Garamond',serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:var(--fs);line-height:1.65;}
+.app{max-width:1120px;margin:0 auto;padding:0 20px 80px;}
+
+/* HERO */
+.hero{text-align:center;padding:44px 0 28px;border-bottom:1px solid var(--bsoft);margin-bottom:26px;}
+.hero-orn{font-size:13px;letter-spacing:6px;color:var(--gold2);font-family:'Cinzel',serif;margin-bottom:12px;}
+.hero-name{font-family:'Cinzel Decorative',serif;font-size:44px;color:var(--gold);letter-spacing:3px;margin-bottom:6px;text-shadow:0 0 40px rgba(240,192,64,.3);}
+.hero-title{font-family:'Cinzel',serif;font-size:13px;letter-spacing:4px;color:var(--text3);}
+
+/* NAV */
+.nav{display:flex;justify-content:center;flex-wrap:wrap;gap:3px;margin:22px auto 30px;background:var(--bg2);border:1px solid var(--bsoft);border-radius:50px;padding:4px;width:fit-content;box-shadow:0 4px 24px var(--shadow);}
+.nav-btn{background:transparent;border:none;color:var(--text3);font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;padding:9px 16px;cursor:pointer;transition:all .25s;text-transform:uppercase;border-radius:40px;white-space:nowrap;}
+.nav-btn.active{background:var(--gold);color:#1a0f00;box-shadow:0 2px 12px rgba(240,192,64,.4);}
+.nav-btn:hover:not(.active){color:var(--gold);background:rgba(240,192,64,.1);}
+.view{display:none;}.view.active{display:block;}
+
+/* SEC TITLE */
+.sec-ttl{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:var(--gold2);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.sec-ttl::before,.sec-ttl::after{content:'';flex:1;height:1px;background:var(--bsoft);}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;background:var(--bg2);border:1px solid var(--bsoft);border-radius:12px;padding:11px 15px;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);font-family:'Cinzel',serif;letter-spacing:.4px;}
+.leg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+.leg-sep{color:var(--border);font-size:11px;letter-spacing:1px;font-family:'Cinzel',serif;}
+
+/* VIEW TOGGLE */
+.view-toggle{display:flex;border:1px solid var(--bsoft);border-radius:24px;overflow:hidden;width:fit-content;}
+.vt-btn{background:transparent;border:none;color:var(--text3);font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;padding:9px 22px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.vt-btn.active{background:var(--gold);color:#1a0f00;}
+.top-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;}
+
+/* MONTH */
+.month-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.m-nav{background:var(--bg2);border:1px solid var(--bsoft);border-radius:50%;width:42px;height:42px;color:var(--gold);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px var(--shadow);}
+.m-nav:hover{background:var(--gold);color:#1a0f00;}
+.month-title{font-family:'Cinzel',serif;font-size:26px;color:var(--gold);letter-spacing:2px;}
+.month-moon{font-size:16px;color:var(--text2);font-style:italic;margin-top:3px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-hdr-c{text-align:center;font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;color:var(--text3);padding:9px 0;}
+
+.cal-day{display:flex;flex-direction:column;align-items:flex-start;padding:7px 6px 5px;border-radius:10px;cursor:pointer;border:1px solid var(--bsoft);min-height:94px;color:var(--text2);position:relative;overflow:hidden;transition:all .2s;background:var(--card);}
+.cal-day:hover{border-color:var(--gold2);background:var(--card2);box-shadow:0 2px 12px var(--shadow);}
+.cal-day.today{border-color:var(--gold)!important;box-shadow:0 0 0 2px rgba(240,192,64,.35)!important;}
+.cal-day.other-m{opacity:.14;cursor:default;background:transparent;border-color:transparent;}
+.cal-day.sel{border-color:var(--gold)!important;background:var(--card2)!important;box-shadow:0 0 0 2px rgba(240,192,64,.4)!important;}
+.cal-day.blocked{background:rgba(85,96,112,.1)!important;border-color:rgba(85,96,112,.3)!important;}
+.cal-day.phase-nova{background:var(--m-nova);}
+.cal-day.phase-crescente{background:var(--m-crescente);}
+.cal-day.phase-cheia{background:var(--m-cheia);}
+.cal-day.phase-minguante{background:var(--m-minguante);}
+.day-top{display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:2px;}
+.day-num{font-family:'Cinzel',serif;font-size:16px;font-weight:500;color:var(--text);}
+.day-moon-em{font-size:15px;line-height:1;}
+.day-phase-lbl{font-size:8px;color:var(--gold);letter-spacing:.3px;font-family:'Cinzel',serif;margin-bottom:1px;}
+.day-sign{font-size:9.5px;color:var(--text3);font-style:italic;margin-bottom:2px;}
+.ev-chips{display:flex;flex-direction:column;gap:2px;width:100%;}
+.ev-chip{font-size:9.5px;padding:2px 6px;border-radius:4px;color:#fff;font-family:'Cinzel',serif;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
+.tr-chip{font-size:9px;padding:2px 5px;border-radius:3px;border:1px solid rgba(240,192,64,.3);color:var(--gold2);background:rgba(240,192,64,.07);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic;}
+
+/* WEEK */
+.week-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.w-nav{background:var(--bg2);border:1px solid var(--bsoft);border-radius:50%;width:40px;height:40px;color:var(--gold);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.w-nav:hover{background:var(--gold);color:#1a0f00;}
+.week-title{font-family:'Cinzel',serif;font-size:20px;color:var(--gold);letter-spacing:1px;}
+.week-grid{display:grid;grid-template-columns:58px repeat(7,1fr);border:1px solid var(--bsoft);border-radius:14px;overflow:hidden;background:var(--bg2);box-shadow:0 4px 24px var(--shadow);}
+.wg-corner{background:var(--bg3);border-right:1px solid var(--bsoft);border-bottom:1px solid var(--bsoft);}
+.wg-day-hdr{background:var(--bg3);border-right:1px solid var(--bsoft);border-bottom:1px solid var(--bsoft);text-align:center;padding:9px 4px;cursor:pointer;transition:background .2s;}
+.wg-day-hdr:hover{background:rgba(240,192,64,.08);}
+.wg-day-hdr.today-col{background:rgba(240,192,64,.12);}
+.wg-day-hdr.sel-col{background:rgba(240,192,64,.16);}
+.wg-day-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:var(--text3);}
+.wg-day-num{font-family:'Cinzel',serif;font-size:22px;color:var(--gold);margin:2px 0;line-height:1;}
+.wg-day-moon{font-size:13px;}
+.wg-day-sign{font-size:9.5px;color:var(--text3);font-style:italic;margin-top:1px;}
+.wg-time-cell{background:var(--bg3);border-right:1px solid var(--bsoft);border-bottom:1px solid var(--bsoft);text-align:right;padding:0 7px;display:flex;align-items:center;justify-content:flex-end;font-family:'Cinzel',serif;font-size:10px;color:var(--text3);letter-spacing:.5px;min-height:54px;}
+.wg-slot{border-right:1px solid var(--bsoft);border-bottom:1px solid var(--bsoft);min-height:54px;position:relative;cursor:pointer;transition:background .15s;}
+.wg-slot:hover{background:rgba(240,192,64,.06);}
+.wg-slot.today-col{background:rgba(240,192,64,.04);}
+.wg-slot.blocked-col{background:rgba(85,96,112,.08);}
+.wg-slot.sel-col{background:rgba(240,192,64,.05);}
+.wg-slot.tr-active{background-image:repeating-linear-gradient(45deg,rgba(240,192,64,.04),rgba(240,192,64,.04) 2px,transparent 2px,transparent 10px);}
+.wg-ev{position:absolute;left:2px;right:2px;top:2px;border-radius:6px;padding:3px 6px;font-size:10px;color:#fff;font-family:'Cinzel',serif;overflow:hidden;cursor:pointer;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.35);border-left:3px solid rgba(255,255,255,.35);}
+.wg-ev-time{font-size:9.5px;opacity:.9;}
+.wg-ev-name{font-size:10px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wg-ev-tipo{font-size:9px;opacity:.75;}
+.wg-add-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;color:var(--gold);font-size:22px;}
+.wg-slot:hover .wg-add-hint{opacity:.45;}
+
+/* DAY PANEL */
+.day-panel{margin-top:26px;border-top:1px solid var(--bsoft);padding-top:24px;}
+.dp-hdr{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.dp-title{font-family:'Cinzel',serif;font-size:19px;color:var(--gold);letter-spacing:1px;line-height:1.3;}
+.dp-acts{display:flex;gap:8px;flex-wrap:wrap;}
+.sm-btn{font-size:12px;padding:7px 16px;border-radius:20px;border:1px solid var(--bsoft);background:transparent;color:var(--text2);cursor:pointer;font-family:'Cinzel',serif;transition:all .2s;letter-spacing:.8px;}
+.sm-btn:hover{border-color:var(--gold2);color:var(--gold);}
+.sm-btn.danger{border-color:rgba(239,68,68,.4);color:#ef4444;}
+.sm-btn.safe{border-color:rgba(16,185,129,.4);color:#10b981;}
+.ev-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.ev-item{display:flex;align-items:flex-start;gap:13px;padding:15px 18px;border-radius:13px;border:1px solid var(--bsoft);background:var(--card);box-shadow:0 2px 10px var(--shadow);transition:all .2s;border-left-width:5px;}
+.ev-item:hover{box-shadow:0 4px 18px var(--shadow);border-color:var(--gold2);}
+.ev-time{font-family:'Cinzel',serif;font-size:15px;color:var(--gold);min-width:52px;margin-top:2px;font-weight:500;}
+.ev-info{flex:1;}
+.ev-name{font-size:24px;color:var(--text);margin-bottom:3px;font-weight:500;}
+.ev-sub{font-size:17px;color:var(--text2);font-style:italic;}
+.ev-valor{font-size:17px;margin-top:5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.ev-obs{font-size:15px;color:var(--text3);margin-top:6px;font-style:italic;border-left:3px solid var(--bsoft);padding-left:9px;line-height:1.5;}
+.badge{display:inline-block;font-size:11px;letter-spacing:.8px;padding:3px 12px;border-radius:20px;font-family:'Cinzel',serif;}
+.b-pago{background:rgba(0,200,128,.15);color:#00c880;border:1px solid rgba(0,200,128,.3);}
+.b-pendente{background:rgba(240,192,64,.12);color:var(--gold);border:1px solid rgba(240,192,64,.25);}
+.b-parcial{background:rgba(176,96,255,.15);color:#b060ff;border:1px solid rgba(176,96,255,.3);}
+.ev-acts{display:flex;flex-direction:column;gap:5px;}
+.btn-icon{background:none;border:1px solid var(--bsoft);color:var(--text3);cursor:pointer;font-size:15px;padding:5px 7px;border-radius:7px;transition:all .2s;line-height:1;}
+.btn-icon:hover{background:var(--card2);border-color:var(--gold2);color:var(--gold);}
+.transit-panel-day{background:rgba(240,192,64,.06);border:1px solid rgba(240,192,64,.22);border-radius:12px;padding:13px 17px;margin-bottom:13px;}
+.tp-ttl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold2);margin-bottom:9px;}
+.tp-item{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid rgba(240,192,64,.1);font-size:17px;color:var(--text2);}
+.tp-item:last-child{border-bottom:none;}
+.tp-planet{font-size:20px;min-width:26px;}
+.add-btn{width:100%;padding:14px;background:transparent;border:1px dashed var(--gold2);border-radius:12px;color:var(--gold);font-family:'Cinzel',serif;font-size:13px;letter-spacing:2px;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.add-btn:hover{background:rgba(240,192,64,.07);border-style:solid;}
+
+/* FORMS */
+.form-group{margin-bottom:16px;}
+.form-label{font-size:13px;color:var(--text2);letter-spacing:1.5px;font-family:'Cinzel',serif;display:block;margin-bottom:7px;}
+.form-input{width:100%;background:var(--bg2);border:1px solid var(--bsoft);border-radius:9px;padding:12px 15px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:19px;outline:none;transition:border-color .2s;}
+.form-input:focus{border-color:var(--gold2);box-shadow:0 0 0 3px rgba(240,192,64,.15);}
+.form-input::placeholder{color:var(--text3);}
+.form-input option{background:var(--bg2);color:var(--text);}
+textarea.form-input{resize:vertical;line-height:1.6;min-height:80px;}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.fr4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;}
+.cc-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px;padding:12px 14px;background:rgba(240,192,64,.06);border:1px solid rgba(240,192,64,.2);border-radius:9px;}
+.cc-row .form-group{margin-bottom:0;}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(5,2,15,.78);backdrop-filter:blur(5px);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .3s;overflow-y:auto;}
+.modal-ov.open{opacity:1;pointer-events:all;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:22px;padding:34px;width:100%;max-width:580px;transform:translateY(24px);transition:transform .3s;margin:auto;box-shadow:0 16px 60px rgba(0,0,0,.7);}
+.modal-ov.open .modal{transform:translateY(0);}
+.modal-title{font-family:'Cinzel',serif;font-size:19px;color:var(--gold);letter-spacing:2px;margin-bottom:24px;text-align:center;}
+.modal-actions{display:flex;gap:12px;margin-top:22px;}
+.btn-cancel{flex:1;padding:12px;background:transparent;border:1px solid var(--bsoft);border-radius:10px;color:var(--text2);font-family:'Cinzel',serif;font-size:12px;letter-spacing:1.5px;cursor:pointer;transition:all .2s;}
+.btn-cancel:hover{border-color:var(--border);color:var(--text);}
+.btn-save{flex:2;padding:12px;background:var(--gold);border:none;border-radius:10px;color:#1a0f00;font-family:'Cinzel',serif;font-size:12px;letter-spacing:1.5px;cursor:pointer;font-weight:600;box-shadow:0 3px 14px rgba(240,192,64,.3);}
+.btn-save:hover{background:#f8d060;}
+.ac-box{display:none;background:var(--bg2);border:1px solid var(--border);border-radius:9px;overflow:hidden;box-shadow:0 6px 20px var(--shadow);margin-top:4px;}
+.ac-item{padding:11px 15px;cursor:pointer;font-size:18px;color:var(--text);border-bottom:1px solid var(--bsoft);transition:background .15s;}
+.ac-item:hover{background:var(--card2);}
+
+/* ASPECT CHIPS in transit form */
+.aspect-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px;}
+.asp-btn{padding:8px 4px;border:1px solid var(--bsoft);border-radius:8px;background:transparent;color:var(--text2);cursor:pointer;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.8px;text-align:center;transition:all .2s;}
+.asp-btn:hover,.asp-btn.active{border-color:var(--gold2);color:var(--gold);background:rgba(240,192,64,.1);}
+.asp-symbol{display:block;font-size:20px;margin-bottom:3px;}
+
+/* CLIENTES */
+.search-box{width:100%;padding:12px 17px;background:var(--bg2);border:1px solid var(--bsoft);border-radius:10px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:20px;outline:none;margin-bottom:22px;}
+.search-box:focus{border-color:var(--gold2);}
+.search-box::placeholder{color:var(--text3);}
+.rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:13px;margin-bottom:32px;}
+.rank-card{padding:18px 16px;background:var(--card);border:1px solid var(--bsoft);border-radius:14px;box-shadow:0 2px 10px var(--shadow);position:relative;transition:all .2s;overflow:hidden;}
+.rank-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold2),var(--gold));}
+.rank-card.top1::before{background:linear-gradient(90deg,#e8c060,#ffdf00,#e8c060);}
+.rank-card:hover{box-shadow:0 4px 20px var(--shadow);transform:translateY(-2px);}
+.rank-num{position:absolute;top:14px;right:14px;font-family:'Cinzel',serif;font-size:22px;color:var(--bsoft);font-weight:600;line-height:1;}
+.rank-num.gold{color:var(--gold2);}
+.rank-name{font-size:16px;color:var(--text);font-weight:500;margin-bottom:4px;padding-right:30px;line-height:1.3;margin-top:8px;}
+.rank-count{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);}
+.rank-fat{font-size:12px;color:var(--text3);margin-top:2px;font-style:italic;}
+
+.reativ-card{display:flex;align-items:center;gap:13px;padding:13px 17px;background:var(--card);border:1px solid var(--bsoft);border-radius:11px;margin-bottom:9px;box-shadow:0 1px 6px var(--shadow);}
+.reativ-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold2),var(--gold3));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:14px;color:#fff;flex-shrink:0;}
+.reativ-info{flex:1;}
+.reativ-name{font-size:18px;color:var(--text);font-weight:500;}
+.reativ-dias{font-size:14px;color:var(--text3);font-style:italic;}
+
+.client-card{background:var(--card);border:1px solid var(--bsoft);border-radius:13px;margin-bottom:12px;box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.client-hdr{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;transition:background .2s;}
+.client-hdr:hover{background:rgba(240,192,64,.04);}
+.c-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold2),var(--gold3));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:15px;color:#fff;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.c-name{font-size:20px;color:var(--text);font-weight:500;}
+.c-meta{font-size:14px;color:var(--text3);font-style:italic;margin-top:2px;}
+.c-stats{display:flex;gap:18px;flex-wrap:wrap;padding:0 20px 12px;}
+.c-stat{font-size:14px;color:var(--text3);}
+.c-stat b{color:var(--gold);font-weight:500;}
+.c-actions{padding:0 20px 13px;display:flex;gap:9px;flex-wrap:wrap;}
+.c-btn{font-size:12px;padding:6px 16px;border-radius:18px;border:1px solid var(--bsoft);background:transparent;color:var(--text2);cursor:pointer;font-family:'Cinzel',serif;letter-spacing:1px;transition:all .2s;}
+.c-btn:hover{border-color:var(--gold2);color:var(--gold);}
+.hist-box{display:none;border-top:1px solid var(--bsoft);background:var(--bg3);}
+.hist-box.open{display:block;}
+.hist-item{font-size:14px;color:var(--text2);padding:9px 20px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:11px;align-items:center;}
+.hist-item:last-child{border-bottom:none;}
+.hist-date{color:var(--gold);font-family:'Cinzel',serif;min-width:86px;font-size:13px;font-weight:500;}
+.hist-pdf{margin-left:auto;background:none;border:1px solid var(--bsoft);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;color:var(--text3);transition:all .2s;}
+.hist-pdf:hover{background:var(--card2);border-color:var(--gold2);color:var(--gold);}
+
+/* PUBLICAÇÕES */
+.pub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;margin-bottom:22px;}
+.pub-card{background:var(--card);border:1px solid var(--bsoft);border-radius:13px;overflow:hidden;box-shadow:0 2px 10px var(--shadow);transition:all .2s;}
+.pub-card:hover{box-shadow:0 5px 20px var(--shadow);transform:translateY(-2px);}
+.pub-img-wrap{width:100%;aspect-ratio:1;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--text3);overflow:hidden;}
+.pub-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.pub-body{padding:11px 14px;}
+.pub-tag{font-size:11px;font-family:'Cinzel',serif;color:var(--gold);letter-spacing:1px;margin-bottom:3px;}
+.pub-title{font-size:16px;color:var(--text);font-weight:500;margin-bottom:2px;}
+.pub-date{font-size:12px;color:var(--text3);font-style:italic;}
+.pub-del{display:block;width:100%;padding:7px;border:none;background:none;border-top:1px solid var(--bsoft);color:var(--text3);cursor:pointer;font-size:12px;transition:all .2s;text-align:center;}
+.pub-del:hover{background:rgba(239,68,68,.08);color:#ef4444;}
+
+/* GESTÃO FINANCEIRA */
+.fin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px;margin-bottom:28px;}
+.fin-card{padding:22px;background:var(--card);border:1px solid var(--bsoft);border-radius:13px;text-align:center;box-shadow:0 2px 10px var(--shadow);}
+.fin-icon{font-size:28px;display:block;margin-bottom:8px;}
+.fin-num{font-family:'Cinzel',serif;font-size:26px;color:var(--gold);display:block;font-weight:500;}
+.fin-lbl{font-size:13px;color:var(--text3);margin-top:4px;}
+.bar-item{display:flex;align-items:center;gap:11px;margin-bottom:13px;}
+.bar-lbl{font-size:16px;color:var(--text2);width:155px;flex-shrink:0;}
+.bar-track{flex:1;height:9px;background:var(--bg3);border-radius:5px;overflow:hidden;border:1px solid var(--bsoft);}
+.bar-fill{height:100%;border-radius:5px;}
+.bar-val{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);min-width:72px;text-align:right;}
+
+/* SERVIÇOS */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px;margin-bottom:24px;}
+.svc-card{padding:19px;background:var(--card);border:1px solid var(--bsoft);border-left:4px solid;border-radius:13px;box-shadow:0 2px 10px var(--shadow);position:relative;transition:all .2s;}
+.svc-card:hover{box-shadow:0 4px 18px var(--shadow);}
+.svc-name{font-size:19px;color:var(--text);font-weight:500;margin-bottom:4px;}
+.svc-valor{font-family:'Cinzel',serif;font-size:17px;color:var(--gold);}
+.svc-del{position:absolute;top:11px;right:13px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;transition:color .2s;}
+.svc-del:hover{color:#ef4444;}
+
+/* LISTA */
+.lst-ev{display:flex;align-items:center;gap:13px;padding:14px 18px;background:var(--card);border:1px solid var(--bsoft);border-left-width:4px;border-radius:12px;margin-bottom:9px;box-shadow:0 1px 6px var(--shadow);transition:all .2s;}
+.lst-ev:hover{box-shadow:0 3px 14px var(--shadow);}
+.lst-date{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);min-width:72px;line-height:1.5;font-weight:500;}
+.lst-info{flex:1;}
+.lst-name{font-size:19px;color:var(--text);font-weight:500;}
+.lst-sub{font-size:15px;color:var(--text2);font-style:italic;margin-top:2px;}
+.lst-val{font-size:14px;margin-top:3px;}
+.no-ev{text-align:center;padding:50px 0;color:var(--text3);font-style:italic;font-size:19px;}
+
+/* EDITORIAL */
+.ed-week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:8px;}
+.ed-day-hdr{text-align:center;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1.5px;color:var(--text3);padding:8px 0;}
+.ed-day-col{min-height:120px;background:var(--card);border:1px solid var(--bsoft);border-radius:10px;padding:7px 5px;cursor:pointer;transition:all .2s;position:relative;}
+.ed-day-col:hover{border-color:var(--gold2);background:var(--card2);}
+.ed-day-col.today-ed{border-color:var(--gold)!important;box-shadow:0 0 0 2px rgba(240,192,64,.3);}
+.ed-day-num{font-family:'Cinzel',serif;font-size:13px;color:var(--text);margin-bottom:3px;display:flex;align-items:center;justify-content:space-between;}
+.ed-day-moon{font-size:12px;}
+.ed-post-chip{font-size:10px;padding:3px 7px;border-radius:5px;color:#fff;font-family:'Cinzel',serif;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:opacity .2s;}
+.ed-post-chip:hover{opacity:.85;}
+.ed-add-hint{font-size:18px;color:var(--bsoft);text-align:center;margin-top:4px;opacity:0;transition:opacity .2s;}
+.ed-day-col:hover .ed-add-hint{opacity:1;}
+
+.ed-month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.ed-month-day{min-height:80px;background:var(--card);border:1px solid var(--bsoft);border-radius:8px;padding:6px 5px;cursor:pointer;transition:all .2s;position:relative;}
+.ed-month-day:hover{border-color:var(--gold2);background:var(--card2);}
+.ed-month-day.other-m{opacity:.15;cursor:default;background:transparent;border-color:transparent;}
+.ed-month-day.today-ed{border-color:var(--gold)!important;}
+
+.ed-post-card{display:flex;align-items:flex-start;gap:13px;padding:14px 18px;background:var(--card);border:1px solid var(--bsoft);border-radius:12px;margin-bottom:10px;box-shadow:0 1px 6px var(--shadow);border-left-width:5px;transition:all .2s;}
+.ed-post-card:hover{box-shadow:0 3px 14px var(--shadow);}
+.ed-post-info{flex:1;}
+.ed-post-title{font-size:19px;color:var(--text);font-weight:500;margin-bottom:3px;}
+.ed-post-meta{font-size:14px;color:var(--text2);font-style:italic;margin-bottom:4px;}
+.ed-post-copy{font-size:14px;color:var(--text3);line-height:1.5;margin-top:5px;font-style:italic;border-left:3px solid var(--bsoft);padding-left:8px;}
+.ed-status-badge{display:inline-block;font-size:11px;padding:2px 10px;border-radius:14px;font-family:'Cinzel',serif;letter-spacing:.6px;}
+.st-ideia{background:rgba(99,102,241,.15);color:#6366f1;border:1px solid rgba(99,102,241,.3);}
+.st-producao{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3);}
+.st-agendado{background:rgba(236,72,153,.15);color:#ec4899;border:1px solid rgba(236,72,153,.3);}
+.st-publicado{background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.3);}
+
+@media print{body *{visibility:hidden;}#pdf-area,#pdf-area *{visibility:visible;}#pdf-area{position:absolute;top:0;left:0;width:100%;background:#fff;color:#111;}}
+#pdf-area{display:none;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hero">
+    <div class="hero-orn">✦ &nbsp; Astrologia &nbsp;·&nbsp; Cartomancia &nbsp; ✦</div>
+    <h1 class="hero-name">Mariana Di Falcco</h1>
+    <div class="hero-title">Agenda Astral de Atendimentos</div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" onclick="switchView('calendar',this)">Calendário</button>
+    <button class="nav-btn" onclick="switchView('lista',this)">Atendimentos</button>
+    <button class="nav-btn" onclick="switchView('clientes',this)">Clientes</button>
+    <button class="nav-btn" onclick="switchView('publicacoes',this)">Publicações</button>
+    <button class="nav-btn" onclick="switchView('editorial',this)">Editorial</button>
+    <button class="nav-btn" onclick="switchView('transitos',this)">Trânsitos</button>
+    <button class="nav-btn" onclick="switchView('servicos',this)">Serviços</button>
+    <button class="nav-btn" onclick="switchView('financeiro',this)">Financeiro</button>
+    <button class="nav-btn" onclick="switchView('backup',this)">💾 Backup</button>
+  </div>
+
+  <!-- CALENDÁRIO -->
+  <div class="view active" id="view-calendar">
+    <div class="top-bar">
+      <div class="view-toggle">
+        <button class="vt-btn active" id="vt-mes" onclick="setCalView('mes')">Mês</button>
+        <button class="vt-btn" id="vt-sem" onclick="setCalView('semana')">Semana</button>
+      </div>
+      <button class="add-btn" onclick="openModal(null,null)" style="width:auto;padding:9px 22px;border-style:solid;">✦ Novo Atendimento</button>
+    </div>
+    <div class="legend">
+      <span class="leg-sep">SERVIÇOS:</span>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--c-mapa)"></div>Mapa Natal</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--c-solar)"></div>Solar</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--c-sinastria)"></div>Sinastria</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--c-tarot)"></div>Tarot</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--c-cigano)"></div>Cigano</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--c-sibilla)"></div>Sibilla</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--c-geral)"></div>Geral</div>
+      <span class="leg-sep" style="margin-left:6px">LUAS:</span>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--m-nova);border:1px solid #8060c0"></div>Nova</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--m-crescente);border:1px solid #00c880"></div>Crescente</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--m-cheia);border:1px solid var(--gold)"></div>Cheia</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--m-minguante);border:1px solid #a060e0"></div>Minguante</div>
+    </div>
+    <div id="month-view">
+      <div class="month-header">
+        <button class="m-nav" onclick="changeMonth(-1)">&#8592;</button>
+        <div style="text-align:center"><div class="month-title" id="month-title"></div><div class="month-moon" id="month-moon"></div></div>
+        <button class="m-nav" onclick="changeMonth(1)">&#8594;</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div id="week-view" style="display:none;">
+      <div class="week-header">
+        <button class="w-nav" onclick="changeWeek(-1)">&#8592;</button>
+        <div class="week-title" id="week-title"></div>
+        <button class="w-nav" onclick="changeWeek(1)">&#8594;</button>
+      </div>
+      <div class="week-grid" id="week-grid"></div>
+    </div>
+    <div class="day-panel">
+      <div class="dp-hdr">
+        <div class="dp-title" id="dp-title">Selecione um dia</div>
+        <div class="dp-acts">
+          <button class="sm-btn danger" id="block-btn" onclick="toggleBlock()" style="display:none">⊘ Bloquear</button>
+        </div>
+      </div>
+      <div id="day-transit-panel"></div>
+      <div class="ev-list" id="ev-list"></div>
+      <button class="add-btn" id="add-btn" onclick="openModal(null,null)" style="display:none">✦ &nbsp; Novo Atendimento</button>
+    </div>
+  </div>
+
+  <!-- LISTA -->
+  <div class="view" id="view-lista">
+    <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
+      <select class="form-input" id="fl-status" onchange="renderLista()" style="flex:1;min-width:130px;font-size:17px;padding:10px 13px;">
+        <option value="">Todos os status</option><option value="pago">Pago</option><option value="pendente">Pendente</option><option value="parcial">Parcial</option>
+      </select>
+      <select class="form-input" id="fl-tipo" onchange="renderLista()" style="flex:1;min-width:130px;font-size:17px;padding:10px 13px;">
+        <option value="">Todos os serviços</option>
+      </select>
+    </div>
+    <div id="lista-content"></div>
+    <button class="add-btn" onclick="openModal(null,null)">✦ &nbsp; Novo Atendimento</button>
+  </div>
+
+  <!-- CLIENTES -->
+  <div class="view" id="view-clientes">
+    <input class="search-box" id="cl-search" type="text" placeholder="Buscar cliente por nome..." oninput="renderClientes()">
+    <div class="sec-ttl">Ranking de Clientes</div>
+    <div class="rank-grid" id="rank-grid"></div>
+    <div class="sec-ttl">Clientes para Reativar</div>
+    <div id="reativacao-list" style="margin-bottom:30px;"></div>
+    <div class="sec-ttl">Todas as Clientes</div>
+    <div id="clientes-content"></div>
+    <button class="add-btn" style="margin-top:8px" onclick="openModal(null,null)">✦ &nbsp; Novo Atendimento</button>
+  </div>
+
+  <!-- PUBLICAÇÕES -->
+  <div class="view" id="view-publicacoes">
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center;">
+      <select class="form-input" id="pub-filtro" onchange="renderPublicacoes()" style="flex:1;min-width:140px;max-width:240px;font-size:17px;padding:10px 13px;">
+        <option value="">Todas as categorias</option>
+        <option value="Trânsito">Trânsito</option><option value="Lua">Lua</option><option value="Tarot">Tarot</option>
+        <option value="Signo">Signo</option><option value="Dica">Dica</option><option value="Outro">Outro</option>
+      </select>
+      <button class="add-btn" onclick="openPubModal()" style="width:auto;padding:10px 22px;border-style:solid;">✦ Nova Publicação</button>
+    </div>
+    <div class="pub-grid" id="pub-grid"></div>
+  </div>
+
+  <!-- TRÂNSITOS -->
+  <div class="view" id="view-transitos">
+    <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
+      <select class="form-input" id="tr-filtro" onchange="renderTransitos()" style="flex:1;min-width:140px;max-width:260px;font-size:17px;padding:10px 13px;">
+        <option value="">Todos os planetas</option>
+        <option value="☀️">☀️ Sol</option><option value="🌙">🌙 Lua</option><option value="☿">☿ Mercúrio</option>
+        <option value="♀">♀ Vênus</option><option value="♂">♂ Marte</option><option value="♃">♃ Júpiter</option>
+        <option value="♄">♄ Saturno</option><option value="⛢">⛢ Urano</option><option value="♆">♆ Netuno</option><option value="♇">♇ Plutão</option>
+      </select>
+      <select class="form-input" id="tr-asp-filtro" onchange="renderTransitos()" style="flex:1;min-width:140px;max-width:240px;font-size:17px;padding:10px 13px;">
+        <option value="">Todos os aspectos</option>
+        <option value="Conjunção">☌ Conjunção</option><option value="Oposição">☍ Oposição</option>
+        <option value="Trígono">△ Trígono</option><option value="Quadratura">□ Quadratura</option>
+        <option value="Sextil">⚹ Sextil</option><option value="Ingresso">→ Ingresso</option>
+        <option value="Retrógrado">℞ Retrógrado</option><option value="Direto">D Direto</option>
+      </select>
+    </div>
+    <div id="transitos-list" style="margin-bottom:20px;"></div>
+    <button class="add-btn" onclick="openTransitModal()">✦ &nbsp; Adicionar Trânsito</button>
+  </div>
+
+  <!-- SERVIÇOS -->
+  <div class="view" id="view-servicos">
+    <div class="svc-grid" id="svc-grid"></div>
+    <div style="background:var(--card);border:1px solid var(--bsoft);border-radius:15px;padding:26px;box-shadow:0 2px 10px var(--shadow);">
+      <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--gold);margin-bottom:17px;letter-spacing:1.5px;">✦ Adicionar Serviço</div>
+      <div class="fr2" style="margin-bottom:13px;">
+        <div class="form-group" style="margin-bottom:0"><label class="form-label">Nome</label><input class="form-input" id="s-nome" type="text" placeholder="ex: Mapa Natal"></div>
+        <div class="form-group" style="margin-bottom:0"><label class="form-label">Valor (R$)</label><input class="form-input" id="s-valor" type="number" placeholder="250"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Cor no calendário</label>
+        <select class="form-input" id="s-cor">
+          <option value="#b060ff">🟣 Roxo — Mapa Natal</option><option value="#ffb020">🟡 Âmbar — Solar</option>
+          <option value="#ff4d94">🩷 Rosa — Sinastria</option><option value="#ff4444">🔴 Vermelho — Tarot</option>
+          <option value="#ff7820">🟠 Laranja — Cigano</option><option value="#00d0f0">🔵 Ciano — Sibilla</option>
+          <option value="#00c880">🟢 Verde — Geral</option>
+        </select></div>
+      <button class="add-btn" onclick="addService()">✦ &nbsp; Salvar Serviço</button>
+    </div>
+  </div>
+
+  <!-- EDITORIAL -->
+  <div class="view" id="view-editorial">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="m-nav" onclick="edChangeWeek(-1)">&#8592;</button>
+        <span class="month-title" id="ed-title" style="font-size:20px;"></span>
+        <button class="m-nav" onclick="edChangeWeek(1)">&#8594;</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <select class="form-input" id="ed-mode" onchange="renderEditorial()" style="font-size:15px;padding:8px 12px;max-width:160px;">
+          <option value="semana">Semana</option>
+          <option value="mes">Mês</option>
+        </select>
+        <button class="add-btn" onclick="openEdModal(null)" style="width:auto;padding:9px 20px;border-style:solid;">✦ Novo Post</button>
+      </div>
+    </div>
+    <div class="legend" style="margin-bottom:16px;">
+      <span class="leg-sep">STATUS:</span>
+      <div class="leg-item"><div class="leg-dot" style="background:#6366f1"></div>Ideia</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div>Em produção</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#10b981"></div>Publicado</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#ec4899"></div>Agendado</div>
+      <span class="leg-sep" style="margin-left:6px">FORMATO:</span>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--c-sibilla)"></div>Feed</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#f97316"></div>Story</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#a855f7"></div>Reels</div>
+    </div>
+    <div id="ed-grid"></div>
+    <div class="sec-ttl" style="margin-top:28px;">Todos os Posts</div>
+    <div id="ed-list"></div>
+  </div>
+
+  <!-- FINANCEIRO -->
+  <div class="view" id="view-financeiro">
+    <div style="display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;">
+      <select class="form-input" id="r-periodo" onchange="renderFinanceiro()" style="font-size:17px;padding:10px 13px;max-width:250px;">
+        <option value="tudo">Todo o período</option><option value="mes">Este mês</option><option value="ano">Este ano</option>
+      </select>
+    </div>
+    <div class="fin-stats" id="fin-stats"></div>
+    <div class="sec-ttl">Faturamento por serviço</div>
+    <div id="fat-bar" style="margin-bottom:32px;"></div>
+    <div class="sec-ttl">Por forma de pagamento</div>
+    <div id="forma-bar" style="margin-bottom:32px;"></div>
+    <div class="sec-ttl">Por signo solar</div>
+    <div id="sign-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;"></div>
+  </div>
+
+  <!-- BACKUP -->
+  <div class="view" id="view-backup">
+    <!-- STATUS BAR -->
+    <div id="backup-status-bar" style="margin-bottom:24px;padding:14px 20px;border-radius:12px;border:1px solid var(--bsoft);background:var(--card);display:flex;align-items:center;gap:14px;">
+      <div id="backup-status-icon" style="font-size:28px;">💾</div>
+      <div>
+        <div id="backup-status-msg" style="font-size:17px;color:var(--text);font-weight:500;">Verificando sincronização...</div>
+        <div id="backup-status-sub" style="font-size:14px;color:var(--text3);margin-top:2px;font-style:italic;"></div>
+      </div>
+    </div>
+
+    <!-- AUTO BACKUP -->
+    <div class="sec-ttl">Backup Automático</div>
+    <div style="background:var(--card);border:1px solid var(--bsoft);border-radius:14px;padding:24px;margin-bottom:22px;box-shadow:0 2px 10px var(--shadow);">
+      <p style="font-size:17px;color:var(--text2);line-height:1.7;margin-bottom:18px;">Seus dados são salvos automaticamente no navegador. Para não perder nada ao trocar de dispositivo ou limpar o cache, exporte o JSON e guarde em local seguro.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button onclick="exportJSON()" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;border:none;background:var(--gold);color:#1a0f00;font-family:'Cinzel',serif;font-size:12px;letter-spacing:1.5px;cursor:pointer;font-weight:600;box-shadow:0 2px 10px rgba(240,192,64,.3);">⬇ Exportar JSON</button>
+        <button onclick="document.getElementById('import-file').click()" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;border:1px solid var(--bsoft);background:transparent;color:var(--text2);font-family:'Cinzel',serif;font-size:12px;letter-spacing:1.5px;cursor:pointer;">⬆ Importar JSON</button>
+      </div>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(this)">
+      <p id="import-msg" style="margin-top:12px;font-size:14px;color:var(--text3);font-style:italic;"></p>
+      <div id="backup-summary" style="margin-top:18px;font-size:14px;color:var(--text3);line-height:1.9;"></div>
+    </div>
+
+    <!-- GOOGLE DRIVE -->
+    <div class="sec-ttl">Google Drive</div>
+    <div style="background:var(--card);border:1px solid var(--bsoft);border-radius:14px;padding:24px;margin-bottom:22px;box-shadow:0 2px 10px var(--shadow);">
+      <p style="font-size:17px;color:var(--text2);line-height:1.7;margin-bottom:18px;">Salve seus dados diretamente na sua conta Google Drive. Os dados ficam num arquivo <code style="background:var(--bg3);padding:2px 7px;border-radius:4px;font-size:14px;">mariana-agenda.json</code> na raiz do seu Drive.</p>
+      <div id="gd-auth-area">
+        <button onclick="gdSignIn()" id="gd-signin-btn" style="display:inline-flex;align-items:center;gap:10px;padding:12px 24px;border-radius:10px;border:none;background:#4285f4;color:#fff;font-family:'Cinzel',serif;font-size:12px;letter-spacing:1.5px;cursor:pointer;box-shadow:0 2px 10px rgba(66,133,244,.3);">
+          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#fff" d="M44.5 20H24v8h11.8C34.7 33.9 29.8 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6-6C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></svg>
+          Conectar com Google
+        </button>
+      </div>
+      <div id="gd-connected-area" style="display:none;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:12px 16px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);border-radius:10px;">
+          <span style="font-size:22px;">✅</span>
+          <div>
+            <div style="font-size:16px;color:#10b981;font-family:'Cinzel',serif;" id="gd-user-name">Conectado</div>
+            <div style="font-size:13px;color:var(--text3);" id="gd-user-email"></div>
+          </div>
+          <button onclick="gdSignOut()" style="margin-left:auto;padding:6px 14px;border-radius:8px;border:1px solid rgba(16,185,129,.3);background:transparent;color:#10b981;cursor:pointer;font-family:'Cinzel',serif;font-size:11px;">Sair</button>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button onclick="gdSave()" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;border:none;background:var(--gold);color:#1a0f00;font-family:'Cinzel',serif;font-size:12px;letter-spacing:1.5px;cursor:pointer;font-weight:600;">☁ Salvar no Drive</button>
+          <button onclick="gdLoad()" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;border:1px solid var(--bsoft);background:transparent;color:var(--text2);font-family:'Cinzel',serif;font-size:12px;letter-spacing:1.5px;cursor:pointer;">⬇ Carregar do Drive</button>
+        </div>
+        <p id="gd-msg" style="margin-top:12px;font-size:14px;color:var(--text3);font-style:italic;"></p>
+      </div>
+    </div>
+
+    <!-- AUTO SAVE INFO -->
+    <div class="sec-ttl">Histórico de Backups Locais</div>
+    <div id="backup-history" style="background:var(--card);border:1px solid var(--bsoft);border-radius:14px;padding:20px;box-shadow:0 2px 10px var(--shadow);font-size:15px;color:var(--text2);line-height:1.9;"></div>
+  </div>
+</div>
+
+<!-- MODAL ATENDIMENTO -->
+<div class="modal-ov" id="modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">✦ Novo Atendimento ✦</div>
+    <div class="fr2">
+      <div class="form-group"><label class="form-label">Data</label><input class="form-input" id="f-data" type="date"></div>
+      <div class="form-group"><label class="form-label">Horário</label><input class="form-input" id="f-hora" type="time"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome da cliente</label>
+      <input class="form-input" id="f-nome" type="text" placeholder="Nome completo" oninput="acUpdate()">
+      <div class="ac-box" id="ac-box"></div>
+    </div>
+    <div class="fr2">
+      <div class="form-group"><label class="form-label">Serviço</label>
+        <select class="form-input" id="f-tipo" onchange="preencherValor()"><option value="">Selecione...</option></select></div>
+      <div class="form-group"><label class="form-label">Duração</label>
+        <select class="form-input" id="f-dur"><option value="60">1 hora</option><option value="90">1h30</option><option value="120">2 horas</option><option value="30">30 min</option></select></div>
+    </div>
+    <div class="fr3">
+      <div class="form-group"><label class="form-label">Valor (R$)</label><input class="form-input" id="f-valor" type="number" placeholder="0"></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-input" id="f-status"><option value="pendente">Pendente</option><option value="pago">Pago</option><option value="parcial">Parcial</option></select></div>
+      <div class="form-group"><label class="form-label">Pagamento</label>
+        <select class="form-input" id="f-forma" onchange="toggleCC()">
+          <option value="">—</option><option value="Pix">Pix</option>
+          <option value="Cartão de Crédito">Cartão de Crédito</option>
+          <option value="Transferência">Transferência</option><option value="Dinheiro">Dinheiro</option>
+        </select></div>
+    </div>
+    <!-- Campos extras para cartão de crédito -->
+    <div id="cc-fields" style="display:none;">
+      <div class="cc-row">
+        <div class="form-group"><label class="form-label">Bandeira</label>
+          <select class="form-input" id="f-bandeira">
+            <option value="">—</option><option value="Visa">💳 Visa</option><option value="Mastercard">💳 Mastercard</option>
+            <option value="Elo">💳 Elo</option><option value="American Express">💳 Amex</option>
+            <option value="Hipercard">💳 Hipercard</option>
+          </select></div>
+        <div class="form-group"><label class="form-label">Parcelas</label>
+          <select class="form-input" id="f-parcelas">
+            <option value="1">1× (à vista)</option><option value="2">2×</option><option value="3">3×</option>
+            <option value="4">4×</option><option value="6">6×</option><option value="12">12×</option>
+          </select></div>
+        <div class="form-group"><label class="form-label">Portador</label>
+          <input class="form-input" id="f-portador" type="text" placeholder="Nome no cartão" style="font-size:16px;"></div>
+      </div>
+    </div>
+    <div class="fr3">
+      <div class="form-group"><label class="form-label">Signo ☉</label>
+        <select class="form-input" id="f-signo"><option value="">—</option><option>♈ Áries</option><option>♉ Touro</option><option>♊ Gêmeos</option><option>♋ Câncer</option><option>♌ Leão</option><option>♍ Virgem</option><option>♎ Libra</option><option>♏ Escorpião</option><option>♐ Sagitário</option><option>♑ Capricórnio</option><option>♒ Aquário</option><option>♓ Peixes</option></select></div>
+      <div class="form-group"><label class="form-label">Signo ☽</label>
+        <select class="form-input" id="f-slua"><option value="">—</option><option>♈ Áries</option><option>♉ Touro</option><option>♊ Gêmeos</option><option>♋ Câncer</option><option>♌ Leão</option><option>♍ Virgem</option><option>♎ Libra</option><option>♏ Escorpião</option><option>♐ Sagitário</option><option>♑ Capricórnio</option><option>♒ Aquário</option><option>♓ Peixes</option></select></div>
+      <div class="form-group"><label class="form-label">Ascendente</label>
+        <select class="form-input" id="f-asc"><option value="">—</option><option>♈ Áries</option><option>♉ Touro</option><option>♊ Gêmeos</option><option>♋ Câncer</option><option>♌ Leão</option><option>♍ Virgem</option><option>♎ Libra</option><option>♏ Escorpião</option><option>♐ Sagitário</option><option>♑ Capricórnio</option><option>♒ Aquário</option><option>♓ Peixes</option></select></div>
+    </div>
+    <div class="form-group"><label class="form-label">Anotações da sessão</label>
+      <textarea class="form-input" id="f-obs" rows="2" placeholder="Temas, insights, energia do mapa..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save" id="modal-save-btn" onclick="saveEvent()">✦ Confirmar Atendimento</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TRÂNSITO -->
+<div class="modal-ov" id="modal-tr">
+  <div class="modal">
+    <div class="modal-title">✦ Registrar Trânsito ✦</div>
+    <div class="fr2">
+      <div class="form-group"><label class="form-label">Data início</label><input class="form-input" id="tr-ini" type="date"></div>
+      <div class="form-group"><label class="form-label">Data fim (opcional)</label><input class="form-input" id="tr-fim" type="date"></div>
+    </div>
+    <div class="fr2">
+      <div class="form-group"><label class="form-label">Planeta</label>
+        <select class="form-input" id="tr-planeta"><option value="☀️">☀️ Sol</option><option value="🌙">🌙 Lua</option><option value="☿">☿ Mercúrio</option><option value="♀">♀ Vênus</option><option value="♂">♂ Marte</option><option value="♃">♃ Júpiter</option><option value="♄">♄ Saturno</option><option value="⛢">⛢ Urano</option><option value="♆">♆ Netuno</option><option value="♇">♇ Plutão</option></select></div>
+      <div class="form-group"><label class="form-label">Cor</label>
+        <select class="form-input" id="tr-cor"><option value="#f0c040">🟡 Dourado</option><option value="#b060ff">🟣 Roxo</option><option value="#00d0f0">🔵 Ciano</option><option value="#ff4444">🔴 Vermelho</option><option value="#00c880">🟢 Verde</option><option value="#ff4d94">🩷 Rosa</option></select></div>
+    </div>
+    <!-- ASPECTO -->
+    <div class="form-group">
+      <label class="form-label">Aspecto</label>
+      <div class="aspect-grid" id="aspect-grid">
+        <button type="button" class="asp-btn" onclick="selectAspect('Conjunção','☌')"><span class="asp-symbol">☌</span>Conjunção</button>
+        <button type="button" class="asp-btn" onclick="selectAspect('Oposição','☍')"><span class="asp-symbol">☍</span>Oposição</button>
+        <button type="button" class="asp-btn" onclick="selectAspect('Trígono','△')"><span class="asp-symbol">△</span>Trígono</button>
+        <button type="button" class="asp-btn" onclick="selectAspect('Quadratura','□')"><span class="asp-symbol">□</span>Quadratura</button>
+        <button type="button" class="asp-btn" onclick="selectAspect('Sextil','⚹')"><span class="asp-symbol">⚹</span>Sextil</button>
+        <button type="button" class="asp-btn" onclick="selectAspect('Ingresso','→')"><span class="asp-symbol">→</span>Ingresso</button>
+        <button type="button" class="asp-btn" onclick="selectAspect('Retrógrado','℞')"><span class="asp-symbol">℞</span>Retrógrado</button>
+        <button type="button" class="asp-btn" onclick="selectAspect('Direto','D')"><span class="asp-symbol">D</span>Direto</button>
+      </div>
+      <input class="form-input" id="tr-aspecto" type="hidden" value="">
+    </div>
+    <div class="fr2">
+      <div class="form-group"><label class="form-label">Planeta 2 (opcional)</label>
+        <select class="form-input" id="tr-planeta2"><option value="">—</option><option value="☀️">☀️ Sol</option><option value="🌙">🌙 Lua</option><option value="☿">☿ Mercúrio</option><option value="♀">♀ Vênus</option><option value="♂">♂ Marte</option><option value="♃">♃ Júpiter</option><option value="♄">♄ Saturno</option><option value="⛢">⛢ Urano</option><option value="♆">♆ Netuno</option><option value="♇">♇ Plutão</option></select></div>
+      <div class="form-group"><label class="form-label">Signo / Casa</label>
+        <input class="form-input" id="tr-signo" type="text" placeholder="ex: Áries, Casa 7"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Título (gerado automaticamente ou edite)</label>
+      <input class="form-input" id="tr-titulo" type="text" placeholder="ex: Marte ☌ Vênus em Áries"></div>
+    <div class="form-group"><label class="form-label">Descrição / Anotações</label>
+      <textarea class="form-input" id="tr-desc" rows="2" placeholder="Energia, impacto, notas para posts, consultas..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeTransitModal()">Cancelar</button>
+      <button class="btn-save" onclick="saveTransit()">✦ Salvar Trânsito</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PUBLICAÇÃO -->
+<div class="modal-ov" id="modal-pub">
+  <div class="modal">
+    <div class="modal-title">✦ Nova Publicação ✦</div>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="pub-titulo" type="text" placeholder="Título do post ou rascunho"></div>
+    <div class="fr2">
+      <div class="form-group"><label class="form-label">Categoria</label>
+        <select class="form-input" id="pub-cat"><option>Trânsito</option><option>Lua</option><option>Tarot</option><option>Signo</option><option>Dica</option><option>Outro</option></select></div>
+      <div class="form-group"><label class="form-label">Data</label><input class="form-input" id="pub-data" type="date"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Legenda / Copy</label>
+      <textarea class="form-input" id="pub-desc" rows="3" placeholder="Texto do post, legenda ou rascunho..."></textarea></div>
+    <div class="form-group"><label class="form-label">Link do Canva</label>
+      <input class="form-input" id="pub-link" type="text" placeholder="https://www.canva.com/design/..."></div>
+    <div class="form-group"><label class="form-label">Imagem (opcional)</label>
+      <input class="form-input" id="pub-img-file" type="file" accept="image/*" style="padding:10px 13px;font-size:15px;"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closePubModal()">Cancelar</button>
+      <button class="btn-save" onclick="savePub()">✦ Salvar Publicação</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITORIAL -->
+<div class="modal-ov" id="modal-ed">
+  <div class="modal">
+    <div class="modal-title" id="ed-modal-title">✦ Novo Post ✦</div>
+    <div class="fr2">
+      <div class="form-group"><label class="form-label">Data</label><input class="form-input" id="ed-data" type="date"></div>
+      <div class="form-group"><label class="form-label">Horário de postagem</label><input class="form-input" id="ed-hora" type="time"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Título / Tema do post</label>
+      <input class="form-input" id="ed-titulo" type="text" placeholder="ex: Marte entra em Áries — o que esperar"></div>
+    <div class="fr3">
+      <div class="form-group"><label class="form-label">Categoria</label>
+        <select class="form-input" id="ed-cat">
+          <option>Trânsito</option><option>Lua</option><option>Tarot</option>
+          <option>Signo</option><option>Cartomancia</option><option>Dica</option><option>Outro</option>
+        </select></div>
+      <div class="form-group"><label class="form-label">Formato</label>
+        <select class="form-input" id="ed-formato">
+          <option value="Feed" style="color:#00d0f0">Feed</option>
+          <option value="Story" style="color:#f97316">Story</option>
+          <option value="Reels" style="color:#a855f7">Reels</option>
+          <option value="Carrossel">Carrossel</option>
+        </select></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-input" id="ed-status">
+          <option value="ideia">💡 Ideia</option>
+          <option value="producao">🔨 Em produção</option>
+          <option value="agendado">📅 Agendado</option>
+          <option value="publicado">✅ Publicado</option>
+        </select></div>
+    </div>
+    <div class="form-group"><label class="form-label">Legenda / Copy</label>
+      <textarea class="form-input" id="ed-copy" rows="3" placeholder="Rascunho da legenda, texto do post..."></textarea></div>
+    <div class="form-group"><label class="form-label">Hashtags</label>
+      <input class="form-input" id="ed-tags" type="text" placeholder="#astrologia #luacheia #marte"></div>
+    <div class="form-group"><label class="form-label">Link do Canva (opcional)</label>
+      <input class="form-input" id="ed-canva" type="text" placeholder="https://www.canva.com/design/..."></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEdModal()">Cancelar</button>
+      <button class="btn-save" id="ed-save-btn" onclick="saveEdPost()">✦ Salvar Post</button>
+    </div>
+  </div>
+</div>
+
+<div id="pdf-area"></div>
+
+<script>
+const MOON_SIGNS={"2026-01-01":"Gêmeos","2026-01-02":"Câncer","2026-01-03":"Câncer","2026-01-04":"Leão","2026-01-05":"Leão","2026-01-06":"Virgem","2026-01-07":"Virgem","2026-01-08":"Virgem","2026-01-09":"Libra","2026-01-10":"Libra","2026-01-11":"Escorpião","2026-01-12":"Escorpião","2026-01-13":"Escorpião","2026-01-14":"Sagitário","2026-01-15":"Sagitário","2026-01-16":"Capricórnio","2026-01-17":"Capricórnio","2026-01-18":"Capricórnio","2026-01-19":"Aquário","2026-01-20":"Aquário","2026-01-21":"Peixes","2026-01-22":"Peixes","2026-01-23":"Áries","2026-01-24":"Áries","2026-01-25":"Touro","2026-01-26":"Touro","2026-01-27":"Gêmeos","2026-01-28":"Gêmeos","2026-01-29":"Câncer","2026-01-30":"Câncer","2026-01-31":"Leão","2026-02-01":"Leão","2026-02-02":"Leão","2026-02-03":"Virgem","2026-02-04":"Virgem","2026-02-05":"Libra","2026-02-06":"Libra","2026-02-07":"Escorpião","2026-02-08":"Escorpião","2026-02-09":"Escorpião","2026-02-10":"Sagitário","2026-02-11":"Sagitário","2026-02-12":"Capricórnio","2026-02-13":"Capricórnio","2026-02-14":"Capricórnio","2026-02-15":"Aquário","2026-02-16":"Aquário","2026-02-17":"Peixes","2026-02-18":"Peixes","2026-02-19":"Áries","2026-02-20":"Áries","2026-02-21":"Áries","2026-02-22":"Touro","2026-02-23":"Touro","2026-02-24":"Gêmeos","2026-02-25":"Gêmeos","2026-02-26":"Câncer","2026-02-27":"Câncer","2026-02-28":"Leão","2026-03-01":"Leão","2026-03-02":"Virgem","2026-03-03":"Virgem","2026-03-04":"Libra","2026-03-05":"Libra","2026-03-06":"Libra","2026-03-07":"Escorpião","2026-03-08":"Escorpião","2026-03-09":"Sagitário","2026-03-10":"Sagitário","2026-03-11":"Sagitário","2026-03-12":"Capricórnio","2026-03-13":"Capricórnio","2026-03-14":"Aquário","2026-03-15":"Aquário","2026-03-16":"Aquário","2026-03-17":"Peixes","2026-03-18":"Peixes","2026-03-19":"Áries","2026-03-20":"Áries","2026-03-21":"Touro","2026-03-22":"Touro","2026-03-23":"Gêmeos","2026-03-24":"Gêmeos","2026-03-25":"Câncer","2026-03-26":"Câncer","2026-03-27":"Leão","2026-03-28":"Leão","2026-03-29":"Virgem","2026-03-30":"Virgem","2026-03-31":"Virgem","2026-04-01":"Libra","2026-04-02":"Libra","2026-04-03":"Escorpião","2026-04-04":"Escorpião","2026-04-05":"Sagitário","2026-04-06":"Sagitário","2026-04-07":"Sagitário","2026-04-08":"Capricórnio","2026-04-09":"Capricórnio","2026-04-10":"Aquário","2026-04-11":"Aquário","2026-04-12":"Aquário","2026-04-13":"Peixes","2026-04-14":"Peixes","2026-04-15":"Áries","2026-04-16":"Áries","2026-04-17":"Touro","2026-04-18":"Touro","2026-04-19":"Gêmeos","2026-04-20":"Gêmeos","2026-04-21":"Câncer","2026-04-22":"Câncer","2026-04-23":"Leão","2026-04-24":"Leão","2026-04-25":"Leão","2026-04-26":"Virgem","2026-04-27":"Virgem","2026-04-28":"Libra","2026-04-29":"Libra","2026-04-30":"Escorpião","2026-05-01":"Escorpião","2026-05-02":"Escorpião","2026-05-03":"Sagitário","2026-05-04":"Sagitário","2026-05-05":"Capricórnio","2026-05-06":"Capricórnio","2026-05-07":"Capricórnio","2026-05-08":"Aquário","2026-05-09":"Aquário","2026-05-10":"Peixes","2026-05-11":"Peixes","2026-05-12":"Áries","2026-05-13":"Áries","2026-05-14":"Áries","2026-05-15":"Touro","2026-05-16":"Touro","2026-05-17":"Gêmeos","2026-05-18":"Gêmeos","2026-05-19":"Câncer","2026-05-20":"Câncer","2026-05-21":"Leão","2026-05-22":"Leão","2026-05-23":"Virgem","2026-05-24":"Virgem","2026-05-25":"Libra","2026-05-26":"Libra","2026-05-27":"Libra","2026-05-28":"Escorpião","2026-05-29":"Escorpião","2026-05-30":"Sagitário","2026-05-31":"Sagitário","2026-06-01":"Sagitário","2026-06-02":"Capricórnio","2026-06-03":"Capricórnio","2026-06-04":"Aquário","2026-06-05":"Aquário","2026-06-06":"Peixes","2026-06-07":"Peixes","2026-06-08":"Peixes","2026-06-09":"Áries","2026-06-10":"Áries","2026-06-11":"Touro","2026-06-12":"Touro","2026-06-13":"Gêmeos","2026-06-14":"Gêmeos","2026-06-15":"Câncer","2026-06-16":"Câncer","2026-06-17":"Leão","2026-06-18":"Leão","2026-06-19":"Virgem","2026-06-20":"Virgem","2026-06-21":"Libra","2026-06-22":"Libra","2026-06-23":"Libra","2026-06-24":"Escorpião","2026-06-25":"Escorpião","2026-06-26":"Sagitário","2026-06-27":"Sagitário","2026-06-28":"Sagitário","2026-06-29":"Capricórnio","2026-06-30":"Capricórnio","2026-07-01":"Aquário","2026-07-02":"Aquário","2026-07-03":"Aquário","2026-07-04":"Peixes","2026-07-05":"Peixes","2026-07-06":"Áries","2026-07-07":"Áries","2026-07-08":"Touro","2026-07-09":"Touro","2026-07-10":"Gêmeos","2026-07-11":"Gêmeos","2026-07-12":"Câncer","2026-07-13":"Câncer","2026-07-14":"Leão","2026-07-15":"Leão","2026-07-16":"Leão","2026-07-17":"Virgem","2026-07-18":"Virgem","2026-07-19":"Libra","2026-07-20":"Libra","2026-07-21":"Escorpião","2026-07-22":"Escorpião","2026-07-23":"Escorpião","2026-07-24":"Sagitário","2026-07-25":"Sagitário","2026-07-26":"Capricórnio","2026-07-27":"Capricórnio","2026-07-28":"Capricórnio","2026-07-29":"Aquário","2026-07-30":"Aquário","2026-07-31":"Peixes","2026-08-01":"Peixes","2026-08-02":"Áries","2026-08-03":"Áries","2026-08-04":"Áries","2026-08-05":"Touro","2026-08-06":"Touro","2026-08-07":"Gêmeos","2026-08-08":"Gêmeos","2026-08-09":"Câncer","2026-08-10":"Câncer","2026-08-11":"Leão","2026-08-12":"Leão","2026-08-13":"Virgem","2026-08-14":"Virgem","2026-08-15":"Libra","2026-08-16":"Libra","2026-08-17":"Escorpião","2026-08-18":"Escorpião","2026-08-19":"Escorpião","2026-08-20":"Sagitário","2026-08-21":"Sagitário","2026-08-22":"Capricórnio","2026-08-23":"Capricórnio","2026-08-24":"Capricórnio","2026-08-25":"Aquário","2026-08-26":"Aquário","2026-08-27":"Peixes","2026-08-28":"Peixes","2026-08-29":"Peixes","2026-08-30":"Áries","2026-08-31":"Áries","2026-09-01":"Touro","2026-09-02":"Touro","2026-09-03":"Gêmeos","2026-09-04":"Gêmeos","2026-09-05":"Câncer","2026-09-06":"Câncer","2026-09-07":"Leão","2026-09-08":"Leão","2026-09-09":"Virgem","2026-09-10":"Virgem","2026-09-11":"Libra","2026-09-12":"Libra","2026-09-13":"Libra","2026-09-14":"Escorpião","2026-09-15":"Escorpião","2026-09-16":"Sagitário","2026-09-17":"Sagitário","2026-09-18":"Sagitário","2026-09-19":"Capricórnio","2026-09-20":"Capricórnio","2026-09-21":"Aquário","2026-09-22":"Aquário","2026-09-23":"Aquário","2026-09-24":"Peixes","2026-09-25":"Peixes","2026-09-26":"Áries","2026-09-27":"Áries","2026-09-28":"Touro","2026-09-29":"Touro","2026-09-30":"Gêmeos","2026-10-01":"Gêmeos","2026-10-02":"Câncer","2026-10-03":"Câncer","2026-10-04":"Leão","2026-10-05":"Leão","2026-10-06":"Leão","2026-10-07":"Virgem","2026-10-08":"Virgem","2026-10-09":"Libra","2026-10-10":"Libra","2026-10-11":"Escorpião","2026-10-12":"Escorpião","2026-10-13":"Sagitário","2026-10-14":"Sagitário","2026-10-15":"Sagitário","2026-10-16":"Capricórnio","2026-10-17":"Capricórnio","2026-10-18":"Capricórnio","2026-10-19":"Aquário","2026-10-20":"Aquário","2026-10-21":"Peixes","2026-10-22":"Peixes","2026-10-23":"Áries","2026-10-24":"Áries","2026-10-25":"Áries","2026-10-26":"Touro","2026-10-27":"Touro","2026-10-28":"Gêmeos","2026-10-29":"Gêmeos","2026-10-30":"Câncer","2026-10-31":"Câncer","2026-11-01":"Leão","2026-11-02":"Leão","2026-11-03":"Virgem","2026-11-04":"Virgem","2026-11-05":"Libra","2026-11-06":"Libra","2026-11-07":"Escorpião","2026-11-08":"Escorpião","2026-11-09":"Escorpião","2026-11-10":"Sagitário","2026-11-11":"Sagitário","2026-11-12":"Capricórnio","2026-11-13":"Capricórnio","2026-11-14":"Capricórnio","2026-11-15":"Aquário","2026-11-16":"Aquário","2026-11-17":"Peixes","2026-11-18":"Peixes","2026-11-19":"Peixes","2026-11-20":"Áries","2026-11-21":"Áries","2026-11-22":"Touro","2026-11-23":"Touro","2026-11-24":"Gêmeos","2026-11-25":"Gêmeos","2026-11-26":"Câncer","2026-11-27":"Câncer","2026-11-28":"Leão","2026-11-29":"Leão","2026-11-30":"Virgem","2026-12-01":"Virgem","2026-12-02":"Libra","2026-12-03":"Libra","2026-12-04":"Libra","2026-12-05":"Escorpião","2026-12-06":"Escorpião","2026-12-07":"Sagitário","2026-12-08":"Sagitário","2026-12-09":"Sagitário","2026-12-10":"Capricórnio","2026-12-11":"Capricórnio","2026-12-12":"Aquário","2026-12-13":"Aquário","2026-12-14":"Aquário","2026-12-15":"Peixes","2026-12-16":"Peixes","2026-12-17":"Áries","2026-12-18":"Áries","2026-12-19":"Touro","2026-12-20":"Touro","2026-12-21":"Gêmeos","2026-12-22":"Gêmeos","2026-12-23":"Câncer","2026-12-24":"Câncer","2026-12-25":"Leão","2026-12-26":"Leão","2026-12-27":"Leão","2026-12-28":"Virgem","2026-12-29":"Virgem","2026-12-30":"Libra","2026-12-31":"Libra"}
+;
+const SIGN_EMOJI={'Áries':'♈','Touro':'♉','Gêmeos':'♊','Câncer':'♋','Leão':'♌','Virgem':'♍','Libra':'♎','Escorpião':'♏','Sagitário':'♐','Capricórnio':'♑','Aquário':'♒','Peixes':'♓'};
+const MOON_PHASES={
+  "2026-01-03":{f:"cheia",e:"🌕",l:"Lua Cheia"},"2026-01-10":{f:"minguante",e:"🌗",l:"Minguante"},
+  "2026-01-18":{f:"nova",e:"🌑",l:"Lua Nova"},"2026-01-25":{f:"crescente",e:"🌓",l:"Crescente"},
+  "2026-02-01":{f:"cheia",e:"🌕",l:"Lua Cheia"},"2026-02-09":{f:"minguante",e:"🌗",l:"Minguante"},
+  "2026-02-17":{f:"nova",e:"🌑",l:"Lua Nova · Eclipse"},"2026-02-24":{f:"crescente",e:"🌓",l:"Crescente"},
+  "2026-03-03":{f:"cheia",e:"🌕",l:"Lua Cheia · Eclipse"},"2026-03-11":{f:"minguante",e:"🌗",l:"Minguante"},
+  "2026-03-18":{f:"nova",e:"🌑",l:"Lua Nova"},"2026-03-25":{f:"crescente",e:"🌓",l:"Crescente"},
+  "2026-04-01":{f:"cheia",e:"🌕",l:"Lua Cheia"},"2026-04-10":{f:"minguante",e:"🌗",l:"Minguante"},
+  "2026-04-17":{f:"nova",e:"🌑",l:"Lua Nova"},"2026-04-23":{f:"crescente",e:"🌓",l:"Crescente"},
+  "2026-05-01":{f:"cheia",e:"🌕",l:"Lua Cheia"},"2026-05-09":{f:"minguante",e:"🌗",l:"Minguante"},
+  "2026-05-16":{f:"nova",e:"🌑",l:"Lua Nova"},"2026-05-23":{f:"crescente",e:"🌓",l:"Crescente"},"2026-05-31":{f:"cheia",e:"🌕",l:"Lua Cheia"},
+  "2026-06-07":{f:"minguante",e:"🌗",l:"Minguante"},"2026-06-14":{f:"nova",e:"🌑",l:"Lua Nova"},
+  "2026-06-21":{f:"crescente",e:"🌓",l:"Crescente"},"2026-06-29":{f:"cheia",e:"🌕",l:"Lua Cheia"},
+  "2026-07-06":{f:"minguante",e:"🌗",l:"Minguante"},"2026-07-14":{f:"nova",e:"🌑",l:"Lua Nova"},
+  "2026-07-21":{f:"crescente",e:"🌓",l:"Crescente"},"2026-07-29":{f:"cheia",e:"🌕",l:"Lua Cheia"},
+  "2026-08-04":{f:"minguante",e:"🌗",l:"Minguante"},"2026-08-12":{f:"nova",e:"🌑",l:"Lua Nova · Eclipse"},
+  "2026-08-19":{f:"crescente",e:"🌓",l:"Crescente"},"2026-08-28":{f:"cheia",e:"🌕",l:"Lua Cheia · Eclipse"},
+  "2026-09-02":{f:"minguante",e:"🌗",l:"Minguante"},"2026-09-10":{f:"nova",e:"🌑",l:"Lua Nova"},
+  "2026-09-17":{f:"crescente",e:"🌓",l:"Crescente"},"2026-09-26":{f:"cheia",e:"🌕",l:"Lua Cheia"},
+  "2026-10-02":{f:"minguante",e:"🌗",l:"Minguante"},"2026-10-10":{f:"nova",e:"🌑",l:"Lua Nova"},
+  "2026-10-17":{f:"crescente",e:"🌓",l:"Crescente"},"2026-10-26":{f:"cheia",e:"🌕",l:"Lua Cheia"},
+  "2026-11-01":{f:"minguante",e:"🌗",l:"Minguante"},"2026-11-09":{f:"nova",e:"🌑",l:"Lua Nova"},
+  "2026-11-15":{f:"crescente",e:"🌓",l:"Crescente"},"2026-11-24":{f:"cheia",e:"🌕",l:"Lua Cheia"},
+  "2026-12-01":{f:"minguante",e:"🌗",l:"Minguante"},"2026-12-08":{f:"nova",e:"🌑",l:"Lua Nova"},
+  "2026-12-15":{f:"crescente",e:"🌓",l:"Crescente"},"2026-12-23":{f:"cheia",e:"🌕",l:"Lua Cheia"},
+  "2026-12-30":{f:"minguante",e:"🌗",l:"Minguante"}
+};
+function getMoonPhase(ds){
+  if(MOON_PHASES[ds]) return MOON_PHASES[ds];
+  const d=new Date(ds+"T12:00:00"),k=new Date('2000-01-06');
+  const ph=(((d-k)/86400000)%29.53059+29.53059)%29.53059;
+  if(ph<3.7) return{f:"nova",e:"🌑",l:""};
+  if(ph<11.1) return{f:"crescente",e:"🌒",l:""};
+  if(ph<18.5) return{f:"cheia",e:"🌕",l:""};
+  return{f:"minguante",e:"🌖",l:""};
+}
+const SVC_COLORS={'Mapa Natal':'#b060ff','Previsão Solar':'#ffb020','Sinastria':'#ff4d94','Tarot':'#ff4444','Baralho Cigano':'#ff7820','Sibilla':'#00d0f0','Consulta Geral':'#00c880'};
+function svcColor(tipo){
+  if(!tipo) return '#00c880';
+  const s=services.find(x=>x.nome===tipo);
+  if(s&&s.cor) return s.cor;
+  return SVC_COLORS[tipo]||'#00c880';
+}
+const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const wdays=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const HOURS=['10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30'];
+
+let events  =JSON.parse(localStorage.getItem('mdf4_ev')||'[]');
+let services=JSON.parse(localStorage.getItem('mdf4_svc')||'[]');
+let blocked =JSON.parse(localStorage.getItem('mdf4_blk')||'[]');
+let transits=JSON.parse(localStorage.getItem('mdf4_tr')||'[]');
+let pubs    =JSON.parse(localStorage.getItem('mdf4_pubs')||'[]');
+let currentDate=new Date(),selectedDay=null,calView='mes';
+let weekStart=(()=>{const d=new Date();d.setDate(d.getDate()-d.getDay());return d;})();
+let selectedAspect='';
+
+const save   =()=>localStorage.setItem('mdf4_ev',JSON.stringify(events));
+const saveSvc=()=>localStorage.setItem('mdf4_svc',JSON.stringify(services));
+const saveBlk=()=>localStorage.setItem('mdf4_blk',JSON.stringify(blocked));
+const saveTr =()=>localStorage.setItem('mdf4_tr',JSON.stringify(transits));
+const savePubs=()=>localStorage.setItem('mdf4_pubs',JSON.stringify(pubs));
+const fmtR   =v=>'R$ '+parseFloat(v||0).toFixed(2).replace('.',',');
+const fmtDate=ds=>{const[y,m,d]=ds.split('-');return`${parseInt(d)} de ${months[parseInt(m)-1]} de ${y}`;};
+const badgeC =s=>s==='pago'?'b-pago':s==='parcial'?'b-parcial':'b-pendente';
+const badgeL =s=>s==='pago'?'Pago':s==='parcial'?'Parcial':'Pendente';
+const toDS   =d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+/* NAV */
+function switchView(v,btn){
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(e=>e.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');btn.classList.add('active');
+  if(v==='lista') renderLista();
+  if(v==='transitos') renderTransitos();
+  if(v==='servicos') renderServicos();
+  if(v==='financeiro') renderFinanceiro();
+  if(v==='clientes') renderClientes();
+  if(v==='publicacoes') renderPublicacoes();
+  if(v==='editorial'){renderEditorial();}
+  if(v==='backup'){renderBackup();}
+}
+function setCalView(v){
+  calView=v;
+  document.getElementById('vt-mes').classList.toggle('active',v==='mes');
+  document.getElementById('vt-sem').classList.toggle('active',v==='semana');
+  document.getElementById('month-view').style.display=v==='mes'?'block':'none';
+  document.getElementById('week-view').style.display=v==='semana'?'block':'none';
+  if(v==='semana') renderWeek(); else renderCalendar();
+}
+
+/* MONTH */
+function changeMonth(d){currentDate.setMonth(currentDate.getMonth()+d);renderCalendar();}
+function renderCalendar(){
+  const y=currentDate.getFullYear(),m=currentDate.getMonth();
+  document.getElementById('month-title').textContent=months[m]+' '+y;
+  const midDS=`${y}-${String(m+1).padStart(2,'0')}-15`;
+  const midM=getMoonPhase(midDS),midSign=MOON_SIGNS[midDS]||'';
+  const midEmoji=midSign?SIGN_EMOJI[midSign]||'':'';
+  document.getElementById('month-moon').textContent=`${midM.e}${midSign?' — '+midEmoji+' ☽ '+midSign:''}`;
+  const g=document.getElementById('cal-grid');
+  g.innerHTML=wdays.map(d=>`<div class="cal-hdr-c">${d}</div>`).join('');
+  const first=new Date(y,m,1).getDay(),total=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate(),today=new Date();
+  for(let i=0;i<first;i++) g.innerHTML+=`<div class="cal-day other-m"><div class="day-top"><span class="day-num">${prev-first+i+1}</span></div></div>`;
+  for(let d=1;d<=total;d++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isT=today.getDate()===d&&today.getMonth()===m&&today.getFullYear()===y;
+    const isB=blocked.includes(ds),moon=getMoonPhase(ds),moonSign=MOON_SIGNS[ds]||'',moonEmoji=moonSign?SIGN_EMOJI[moonSign]||'':'';
+    const dayEvs=events.filter(e=>e.date===ds).slice(0,3),dayTr=transits.filter(t=>t.dateIni<=ds&&(!t.dateFim||t.dateFim>=ds)).slice(0,2);
+    const isMain=!!MOON_PHASES[ds];
+    const phCls={'nova':'phase-nova','crescente':'phase-crescente','cheia':'phase-cheia','minguante':'phase-minguante'};
+    let cls='cal-day '+(phCls[moon.f]||'');
+    if(isT) cls+=' today';if(isB) cls+=' blocked';if(selectedDay===ds) cls+=' sel';
+    const chips=dayEvs.map(ev=>`<div class="ev-chip" style="background:${svcColor(ev.tipo)}">${ev.hora?ev.hora.slice(0,5)+' ':''} ${ev.nome.split(' ')[0]}</div>`).join('')
+      +dayTr.map(t=>`<div class="tr-chip">${t.planeta}${t.aspecto?t.aspecto.charAt(0):''} ${t.titulo.slice(0,12)}${t.titulo.length>12?'…':''}</div>`).join('');
+    g.innerHTML+=`<div class="${cls}" onclick="selectDay('${ds}')">
+      <div class="day-top"><span class="day-num">${d}</span><span class="day-moon-em">${moon.e}</span></div>
+      ${isMain?`<div class="day-phase-lbl">${moon.l}</div>`:''}
+      ${moonSign?`<div class="day-sign">${moonEmoji} ☽ ${moonSign}</div>`:''}
+      <div class="ev-chips">${chips}</div>
+    </div>`;
+  }
+  for(let i=1;i<=42-first-total;i++) g.innerHTML+=`<div class="cal-day other-m"><div class="day-top"><span class="day-num">${i}</span></div></div>`;
+  if(selectedDay) renderDayPanel(selectedDay);
+}
+
+/* WEEK */
+function changeWeek(d){weekStart=new Date(weekStart);weekStart.setDate(weekStart.getDate()+d*7);renderWeek();}
+function renderWeek(){
+  const days=[];
+  for(let i=0;i<7;i++){const d=new Date(weekStart);d.setDate(d.getDate()+i);days.push(d);}
+  const s=days[0],e=days[6];
+  document.getElementById('week-title').textContent=`${s.getDate()} ${months[s.getMonth()].slice(0,3)} — ${e.getDate()} ${months[e.getMonth()].slice(0,3)} ${e.getFullYear()}`;
+  const todayDS=toDS(new Date());
+  let html=`<div class="wg-corner"></div>`;
+  days.forEach(d=>{
+    const ds=toDS(d),moon=getMoonPhase(ds),moonSign=MOON_SIGNS[ds]||'',moonEmoji=moonSign?SIGN_EMOJI[moonSign]||'':'';
+    const isT=ds===todayDS,isSel=selectedDay===ds;
+    html+=`<div class="wg-day-hdr${isT?' today-col':''}${isSel?' sel-col':''}" onclick="selectDay('${ds}')">
+      <div class="wg-day-name">${wdays[d.getDay()]}</div>
+      <div class="wg-day-num">${d.getDate()}</div>
+      <div class="wg-day-moon">${moon.e}</div>
+      ${moonSign?`<div class="wg-day-sign">${moonEmoji} ${moonSign}</div>`:''}
+    </div>`;
+  });
+  HOURS.forEach(h=>{
+    html+=`<div class="wg-time-cell">${h}</div>`;
+    days.forEach(d=>{
+      const ds=toDS(d),isT=ds===todayDS,isB=blocked.includes(ds),isSel=selectedDay===ds;
+      const hasTr=transits.some(t=>t.dateIni<=ds&&(!t.dateFim||t.dateFim>=ds));
+      let cls='wg-slot';
+      if(isT) cls+=' today-col';if(isB) cls+=' blocked-col';if(isSel) cls+=' sel-col';if(hasTr) cls+=' tr-active';
+      const slotEvs=events.filter(ev=>ev.date===ds&&ev.hora&&ev.hora.slice(0,5)===h);
+      let evHtml='';
+      slotEvs.forEach(ev=>{
+        const dur=parseInt(ev.dur||60),slots=Math.max(1,Math.round(dur/30)),ht=slots*54;
+        evHtml+=`<div class="wg-ev" style="background:${svcColor(ev.tipo)};height:${ht}px;">
+          <div class="wg-ev-time">${ev.hora}</div>
+          <div class="wg-ev-name">${ev.nome.split(' ')[0]}</div>
+          <div class="wg-ev-tipo">${ev.tipo||'Consulta'}</div>
+        </div>`;
+      });
+      const clickHandler=slotEvs.length?`selectDay('${ds}')`:`openModal('${ds}','${h}')`;
+      html+=`<div class="${cls}" onclick="${clickHandler};event.stopPropagation()">
+        ${evHtml}
+        ${!slotEvs.length?`<div class="wg-add-hint">+</div>`:''}
+      </div>`;
+    });
+  });
+  document.getElementById('week-grid').innerHTML=html;
+  if(selectedDay) renderDayPanel(selectedDay);
+}
+
+/* SELECT DAY */
+function selectDay(ds){
+  selectedDay=ds;
+  if(calView==='mes') renderCalendar(); else renderWeek();
+  renderDayPanel(ds);
+  document.getElementById('add-btn').style.display='flex';
+  const b=document.getElementById('block-btn');b.style.display='inline-flex';
+  const isB=blocked.includes(ds);
+  b.textContent=isB?'✓ Desbloquear':'⊘ Bloquear';
+  b.className='sm-btn '+(isB?'safe':'danger');
+}
+function toggleBlock(){
+  if(!selectedDay) return;
+  const i=blocked.indexOf(selectedDay);if(i>-1) blocked.splice(i,1); else blocked.push(selectedDay);
+  saveBlk();selectDay(selectedDay);
+}
+
+/* DAY PANEL */
+function renderDayPanel(ds){
+  const moon=getMoonPhase(ds),mp=MOON_PHASES[ds];
+  const moonSign=MOON_SIGNS[ds]||'',moonEmoji=moonSign?SIGN_EMOJI[moonSign]||'':'';
+  const moonTxt=mp?` — ${moon.e} ${moon.l}`:` ${moon.e}`;
+  const signTxt=moonSign?` · ${moonEmoji} ☽ ${moonSign}`:'';
+  document.getElementById('dp-title').textContent=fmtDate(ds)+moonTxt+signTxt;
+  const isB=blocked.includes(ds);
+  const b=document.getElementById('block-btn');
+  b.textContent=isB?'✓ Desbloquear':'⊘ Bloquear';b.className='sm-btn '+(isB?'safe':'danger');
+  // transits
+  const dayTr=transits.filter(t=>t.dateIni<=ds&&(!t.dateFim||t.dateFim>=ds));
+  const trEl=document.getElementById('day-transit-panel');
+  if(dayTr.length){
+    let h=`<div class="transit-panel-day"><div class="tp-ttl">TRÂNSITOS ATIVOS</div>`;
+    dayTr.forEach(t=>{
+      const aspSym=t.aspecto?` <span style="color:${t.cor||'var(--gold)'};">${t.aspecto}</span>`:'';
+      h+=`<div class="tp-item"><span class="tp-planet">${t.planeta}</span>
+        <div><b style="color:${t.cor||'var(--gold)'}">${t.titulo}</b>${aspSym}${t.desc?'<br><span style="font-size:15px;color:var(--text3)">'+t.desc+'</span>':''}</div></div>`;
+    });
+    h+='</div>';trEl.innerHTML=h;
+  } else trEl.innerHTML='';
+  // events
+  const dayEvs=events.filter(e=>e.date===ds).sort((a,z)=>a.hora.localeCompare(z.hora));
+  let html='';
+  if(isB) html+=`<div class="ev-item" style="border-left-color:var(--c-blocked)"><div class="ev-info"><div class="ev-name" style="color:var(--text3)">⊘ Dia bloqueado</div><div class="ev-sub">Indisponível para atendimentos</div></div></div>`;
+  if(!dayEvs.length&&!isB) html+=`<p style="color:var(--text3);font-style:italic;font-size:19px;padding:10px 0">Nenhum atendimento neste dia.</p>`;
+  dayEvs.forEach(ev=>{
+    const color=svcColor(ev.tipo);
+    const[,m,d]=ds.split('-');
+    const wb=encodeURIComponent(`Olá ${ev.nome}! Confirmo seu atendimento de ${ev.tipo||'consulta'} no dia ${parseInt(d)}/${parseInt(m)} às ${ev.hora||'horário combinado'}. Até lá! 🌙`);
+    let pagInfo=ev.forma||'';
+    if(ev.forma==='Cartão de Crédito'){
+      if(ev.bandeira) pagInfo+=` ${ev.bandeira}`;
+      if(ev.parcelas&&ev.parcelas!=='1') pagInfo+=` ${ev.parcelas}×`;
+      if(ev.portador) pagInfo+=` (${ev.portador})`;
+    }
+    html+=`<div class="ev-item" style="border-left-color:${color}">
+      <div class="ev-time">${ev.hora||'—'}</div>
+      <div class="ev-info">
+        <div class="ev-name">${ev.nome}</div>
+        <div class="ev-sub">${ev.tipo||'Consulta'}${ev.signo?' · '+ev.signo:''}${ev.slua?' · ☽ '+ev.slua:''}${ev.asc?' · ASC '+ev.asc:''}</div>
+        ${ev.valor?`<div class="ev-valor">${fmtR(ev.valor)}<span class="badge ${badgeC(ev.status)}">${badgeL(ev.status)}</span>${pagInfo?`<span style="font-size:14px;color:var(--text3)">${pagInfo}</span>`:''}</div>`:''}
+        ${ev.obs?`<div class="ev-obs">${ev.obs}</div>`:''}
+      </div>
+      <div class="ev-acts">
+        <button class="btn-icon" onclick="window.open('https://wa.me/?text=${wb}','_blank')" title="WhatsApp">📱</button>
+        <button class="btn-icon" onclick="gerarPDF('${ev.id}')" title="Comprovante PDF">📄</button>
+        <button class="btn-icon" onclick="openEditModal('${ev.id}')" title="Editar atendimento" style="color:var(--gold2)">✏️</button>
+        <button class="btn-icon" onclick="deleteEv('${ev.id}')" title="Remover">✕</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('ev-list').innerHTML=html;
+}
+
+/* PDF */
+function gerarPDF(id){
+  const ev=events.find(e=>e.id===id);if(!ev) return;
+  const num='MDF-'+ev.id.slice(-6).toUpperCase();
+  const sc=ev.status==='pago'?'#1a6040':ev.status==='parcial'?'#7a5e10':'#7a2020';
+  const sl=ev.status==='pago'?'PAGO':ev.status==='parcial'?'PARCIALMENTE PAGO':'PENDENTE';
+  let pagTxt=ev.forma||'—';
+  if(ev.forma==='Cartão de Crédito'){
+    if(ev.bandeira) pagTxt+=` · ${ev.bandeira}`;
+    if(ev.parcelas&&ev.parcelas!=='1') pagTxt+=` · ${ev.parcelas}× de ${fmtR(parseFloat(ev.valor||0)/parseInt(ev.parcelas||1))}`;
+    else pagTxt+=' · à vista';
+    if(ev.portador) pagTxt+=` · ${ev.portador}`;
+  }
+  const area=document.getElementById('pdf-area');
+  area.innerHTML=`<div style="font-family:Georgia,serif;max-width:640px;margin:0 auto;padding:60px 56px;color:#1e1408;background:#fff;min-height:100vh;">
+    <div style="text-align:center;margin-bottom:44px;">
+      <div style="font-size:40px;margin-bottom:12px;">🌙</div>
+      <div style="font-size:34px;font-weight:700;letter-spacing:4px;color:#6b4f20;margin-bottom:4px;">Mariana Di Falcco</div>
+      <div style="font-size:14px;letter-spacing:3px;color:#a88050;text-transform:uppercase;">Astróloga · Cartomante</div>
+      <div style="width:200px;height:1px;background:linear-gradient(90deg,transparent,#c49a45,transparent);margin:18px auto;"></div>
+      <div style="font-size:13px;letter-spacing:3px;color:#aaa;text-transform:uppercase;">Comprovante de Pagamento · Nº ${num}</div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:17px;margin-bottom:40px;">
+      <tr style="border-bottom:1px solid #ede0cc;"><td style="padding:13px 4px;color:#7a5c30;">Emitido em</td><td style="text-align:right;font-weight:600;">${new Date().toLocaleDateString('pt-BR')}</td></tr>
+      <tr style="border-bottom:1px solid #ede0cc;background:#fffcf5;"><td style="padding:15px 4px;color:#4a3018;font-size:19px;">Cliente</td><td style="text-align:right;font-weight:700;font-size:22px;color:#1e1408;">${ev.nome}</td></tr>
+      ${ev.signo?`<tr style="border-bottom:1px solid #ede0cc;"><td style="padding:13px 4px;color:#7a5c30;">Signo Solar</td><td style="text-align:right;">${ev.signo}</td></tr>`:''}
+      <tr style="border-bottom:1px solid #ede0cc;background:#fffcf5;"><td style="padding:14px 4px;color:#4a3018;font-weight:600;font-size:18px;">Serviço</td><td style="text-align:right;font-weight:700;color:#6b4f20;font-size:18px;">${ev.tipo||'Consulta'}</td></tr>
+      <tr style="border-bottom:1px solid #ede0cc;"><td style="padding:13px 4px;color:#7a5c30;">Data do atendimento</td><td style="text-align:right;">${fmtDate(ev.date)}</td></tr>
+      ${ev.hora?`<tr style="border-bottom:1px solid #ede0cc;"><td style="padding:13px 4px;color:#7a5c30;">Horário</td><td style="text-align:right;">${ev.hora}</td></tr>`:''}
+      <tr style="border-bottom:1px solid #ede0cc;"><td style="padding:13px 4px;color:#7a5c30;">Forma de pagamento</td><td style="text-align:right;">${pagTxt}</td></tr>
+      <tr style="border-bottom:1px solid #ede0cc;"><td style="padding:13px 4px;color:#7a5c30;">Status</td><td style="text-align:right;font-weight:700;color:${sc};">${sl}</td></tr>
+      <tr style="background:linear-gradient(90deg,#fff9ee,#fdf0d0);border-top:2px solid #c49a45;">
+        <td style="padding:22px 4px;font-size:22px;font-weight:700;color:#6b4f20;letter-spacing:1px;">VALOR TOTAL</td>
+        <td style="text-align:right;font-size:32px;font-weight:700;color:#6b4f20;">${fmtR(ev.valor)}</td>
+      </tr>
+    </table>
+    <div style="margin-top:60px;text-align:center;">
+      <div style="width:240px;height:1px;background:linear-gradient(90deg,transparent,#c49a45,transparent);margin:0 auto 26px;"></div>
+      <div style="font-size:26px;font-style:italic;color:#6b4f20;margin-bottom:6px;">Mariana Di Falcco</div>
+      <div style="font-size:13px;letter-spacing:2px;color:#a88050;text-transform:uppercase;">Astróloga &amp; Cartomante</div>
+      <div style="font-size:13px;color:#a88050;margin-top:16px;line-height:2;">
+        <div>📱 WhatsApp: (11) 98699-1282</div>
+        <div>📧 tarot.marianaaddeo@gmail.com</div>
+        <div>📸 @marianadifalcoo &nbsp;·&nbsp; @marianaaddeo</div>
+      </div>
+      <div style="font-size:11px;color:#ccc;margin-top:14px;">Documento gerado em ${new Date().toLocaleString('pt-BR')}</div>
+    </div>
+  </div>`;
+  area.style.display='block';
+  setTimeout(()=>{window.print();setTimeout(()=>{area.style.display='none';},700);},150);
+}
+
+/* CC TOGGLE */
+function toggleCC(){
+  const v=document.getElementById('f-forma').value;
+  document.getElementById('cc-fields').style.display=v==='Cartão de Crédito'?'block':'none';
+}
+
+/* MODAL ATENDIMENTO */
+function acUpdate(){
+  const q=document.getElementById('f-nome').value.toLowerCase().trim();
+  const box=document.getElementById('ac-box');
+  if(q.length<2){box.style.display='none';return;}
+  const nomes=[...new Set(events.map(e=>e.nome))].filter(n=>n.toLowerCase().includes(q)).slice(0,5);
+  if(!nomes.length){box.style.display='none';return;}
+  box.style.display='block';
+  box.innerHTML=nomes.map(n=>`<div class="ac-item" onclick="pickC('${n.replace(/'/g,"\\'")}')">${n}</div>`).join('');
+}
+function pickC(n){
+  document.getElementById('f-nome').value=n;document.getElementById('ac-box').style.display='none';
+  const prev=events.filter(e=>e.nome===n).sort((a,b)=>b.date.localeCompare(a.date))[0];
+  if(prev){if(prev.signo) document.getElementById('f-signo').value=prev.signo;if(prev.slua) document.getElementById('f-slua').value=prev.slua;if(prev.asc) document.getElementById('f-asc').value=prev.asc;}
+}
+function populateSvc(){
+  const sel=document.getElementById('f-tipo'),pv=sel.value;
+  sel.innerHTML='<option value="">Selecione...</option>';
+  if(services.length) services.forEach(s=>sel.innerHTML+=`<option value="${s.nome}" data-v="${s.valor||0}">${s.nome}${s.valor?' — R$ '+parseFloat(s.valor).toFixed(0):''}</option>`);
+  else ['Mapa Natal','Previsão Solar','Sinastria','Tarot','Baralho Cigano','Sibilla','Consulta Geral'].forEach(t=>sel.innerHTML+=`<option value="${t}">${t}</option>`);
+  sel.value=pv;
+  const ft=document.getElementById('fl-tipo');
+  if(ft){const fpv=ft.value;ft.innerHTML='<option value="">Todos os serviços</option>';(services.length?services.map(s=>s.nome):['Mapa Natal','Previsão Solar','Sinastria','Tarot','Baralho Cigano','Sibilla','Consulta Geral']).forEach(t=>ft.innerHTML+=`<option value="${t}">${t}</option>`);ft.value=fpv;}
+}
+function preencherValor(){
+  const sel=document.getElementById('f-tipo'),opt=sel.options[sel.selectedIndex];
+  const v=opt?opt.getAttribute('data-v'):'';if(v&&v!=='0') document.getElementById('f-valor').value=v;
+}
+function openModal(date,hora){
+  editingId=null;
+  document.getElementById('modal-title').textContent='✦ Novo Atendimento ✦';
+  document.getElementById('modal-save-btn').textContent='✦ Confirmar Atendimento';
+  document.getElementById('modal-save-btn').onclick=saveEvent;
+  ['f-nome','f-obs','f-valor','f-bandeira','f-portador'].forEach(i=>{const el=document.getElementById(i);if(el) el.value='';});
+  ['f-tipo','f-signo','f-slua','f-asc','f-forma'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('f-status').value='pendente';document.getElementById('f-dur').value='60';
+  document.getElementById('f-parcelas').value='1';
+  document.getElementById('f-data').value=date||selectedDay||new Date().toISOString().split('T')[0];
+  document.getElementById('f-hora').value=hora||'';
+  document.getElementById('ac-box').style.display='none';
+  document.getElementById('cc-fields').style.display='none';
+  populateSvc();document.getElementById('modal').classList.add('open');
+}
+function saveEvent(){
+  const nome=document.getElementById('f-nome').value.trim(),data=document.getElementById('f-data').value;
+  if(!nome||!data) return;
+  events.push({id:Date.now().toString(),nome,date:data,
+    hora:document.getElementById('f-hora').value,tipo:document.getElementById('f-tipo').value,
+    dur:document.getElementById('f-dur').value,valor:document.getElementById('f-valor').value,
+    status:document.getElementById('f-status').value,forma:document.getElementById('f-forma').value,
+    bandeira:document.getElementById('f-bandeira').value,parcelas:document.getElementById('f-parcelas').value,
+    portador:document.getElementById('f-portador').value,
+    signo:document.getElementById('f-signo').value,slua:document.getElementById('f-slua').value,
+    asc:document.getElementById('f-asc').value,obs:document.getElementById('f-obs').value.trim()});
+  save();closeModal();selectedDay=data;
+  if(calView==='mes') renderCalendar(); else renderWeek();
+  renderDayPanel(data);
+}
+function deleteEv(id){events=events.filter(e=>e.id!==id);save();if(selectedDay) renderDayPanel(selectedDay);if(calView==='mes') renderCalendar(); else renderWeek();}
+
+/* LISTA */
+function renderLista(){
+  populateSvc();
+  const fs=document.getElementById('fl-status').value,ft=document.getElementById('fl-tipo').value;
+  let list=[...events].filter(e=>(!fs||e.status===fs)&&(!ft||e.tipo===ft)).sort((a,b)=>(a.date+a.hora).localeCompare(b.date+b.hora));
+  if(!list.length){document.getElementById('lista-content').innerHTML=`<div class="no-ev">Nenhum atendimento encontrado.</div>`;return;}
+  const groups={};list.forEach(ev=>{const[y,m]=ev.date.split('-');const k=months[parseInt(m)-1]+' '+y;if(!groups[k]) groups[k]=[];groups[k].push(ev);});
+  let html='';
+  for(const[mo,evs] of Object.entries(groups)){
+    html+=`<div style="margin-bottom:24px"><div class="sec-ttl">${mo}</div>`;
+    evs.forEach(ev=>{
+      const[,m,d]=ev.date.split('-'),moon=getMoonPhase(ev.date),color=svcColor(ev.tipo);
+      let pagShort=ev.forma||'';
+      if(ev.forma==='Cartão de Crédito'&&ev.bandeira) pagShort=`${ev.bandeira}${ev.parcelas&&ev.parcelas!=='1'?' '+ev.parcelas+'×':''}`;
+      html+=`<div class="lst-ev" style="border-left-color:${color}">
+        <div class="lst-date">${parseInt(d)} ${months[parseInt(m)-1].slice(0,3)}<br><span style="font-size:19px">${moon.e}</span></div>
+        <div style="font-size:24px">${ev.signo?ev.signo.split(' ')[0]:'✦'}</div>
+        <div class="lst-info">
+          <div class="lst-name">${ev.nome}</div>
+          <div class="lst-sub">${ev.tipo||'Consulta'}${ev.hora?' · '+ev.hora:''}${pagShort?' · '+pagShort:''}</div>
+          ${ev.valor?`<div class="lst-val"><span class="badge ${badgeC(ev.status)}">${badgeL(ev.status)}</span> ${fmtR(ev.valor)}</div>`:''}
+        </div>
+        <button class="btn-icon" onclick="gerarPDF('${ev.id}')" title="PDF">📄</button>
+        <button class="btn-icon" onclick="openEditModal('${ev.id}')" title="Editar" style="color:var(--gold2)">✏️</button>
+        <button class="btn-icon" onclick="deleteLst('${ev.id}')">✕</button>
+      </div>`;
+    });html+='</div>';
+  }document.getElementById('lista-content').innerHTML=html;
+}
+function deleteLst(id){events=events.filter(e=>e.id!==id);save();renderLista();}
+
+/* CLIENTES */
+function getClientes(){
+  const all={};
+  events.forEach(ev=>{
+    if(!all[ev.nome]) all[ev.nome]={nome:ev.nome,evs:[],signo:ev.signo||'',total:0,pago:0};
+    all[ev.nome].evs.push(ev);all[ev.nome].total+=parseFloat(ev.valor||0);
+    if(ev.status==='pago') all[ev.nome].pago+=parseFloat(ev.valor||0);
+    if(ev.signo&&!all[ev.nome].signo) all[ev.nome].signo=ev.signo;
+  });
+  return Object.values(all).sort((a,b)=>b.evs.length-a.evs.length);
+}
+function renderClientes(){
+  const q=(document.getElementById('cl-search').value||'').toLowerCase().trim();
+  const all=getClientes();
+  // RANKING
+  document.getElementById('rank-grid').innerHTML=all.slice(0,6).length?all.slice(0,6).map((c,i)=>`
+    <div class="rank-card${i===0?' top1':''}">
+      <div class="rank-num${i<3?' gold':''}">#${i+1}</div>
+      <div class="rank-name">${c.nome}</div>
+      <div class="rank-count">${c.evs.length} atendimento${c.evs.length>1?'s':''}</div>
+      <div class="rank-fat">${fmtR(c.total)}${c.pago>0?' · '+fmtR(c.pago)+' pago':''}</div>
+    </div>`).join(''):`<p style="color:var(--text3);font-style:italic;font-size:17px;grid-column:1/-1">Sem atendimentos registrados.</p>`;
+  // REATIVAÇÃO 90 dias
+  const today=new Date();
+  const reativ=all.filter(c=>{
+    const last=c.evs.sort((a,b)=>b.date.localeCompare(a.date))[0];
+    const diff=(today-new Date(last.date+'T12:00:00'))/86400000;
+    return diff>=90;
+  }).slice(0,6);
+  const rEl=document.getElementById('reativacao-list');
+  if(reativ.length){
+    let rh='';
+    reativ.forEach(c=>{
+      const ini=c.nome.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+      const last=c.evs.sort((a,b)=>b.date.localeCompare(a.date))[0];
+      const diff=Math.round((today-new Date(last.date+'T12:00:00'))/86400000);
+      const wb=encodeURIComponent(`Olá ${c.nome}! Há algum tempo não nos encontramos. Que tal marcarmos um atendimento? 🌙✨`);
+      rh+=`<div class="reativ-card"><div class="reativ-av">${ini}</div><div class="reativ-info"><div class="reativ-name">${c.nome}</div><div class="reativ-dias">Último atendimento há ${diff} dias</div></div>
+        <button class="c-btn" onclick="window.open('https://wa.me/?text=${wb}','_blank')">📱 WhatsApp</button></div>`;
+    });
+    rEl.innerHTML=rh;
+  } else rEl.innerHTML=`<p style="color:var(--text3);font-style:italic;font-size:16px;margin-bottom:20px">Nenhuma cliente inativa há mais de 90 dias. ✦</p>`;
+  // LISTA COMPLETA
+  const clientes=all.filter(c=>!q||c.nome.toLowerCase().includes(q));
+  if(!clientes.length){document.getElementById('clientes-content').innerHTML=`<div class="no-ev">Nenhuma cliente encontrada.</div>`;return;}
+  let html='';
+  clientes.forEach(c=>{
+    const ini=c.nome.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    const sorted=c.evs.sort((a,b)=>b.date.localeCompare(a.date));
+    const last=sorted[0];const[,lm,ld]=last.date.split('-');
+    const cid='h-'+c.nome.replace(/\W/g,'_');
+    const wb=encodeURIComponent(`Olá ${c.nome}! Passando para confirmar nosso próximo atendimento. Qualquer dúvida, é só chamar. 🌙`);
+    const histH=sorted.map(ev=>{const[,m,d]=ev.date.split('-');return`<div class="hist-item"><span class="hist-date">${parseInt(d)} ${months[parseInt(m)-1].slice(0,3)}</span><span style="flex:1">${ev.tipo||'Consulta'}${ev.valor?' · '+fmtR(ev.valor):''} <span class="badge ${badgeC(ev.status)}" style="font-size:10px">${badgeL(ev.status)}</span></span><button class="hist-pdf" onclick="openEditModal('${ev.id}')">✏️</button><button class="hist-pdf" onclick="gerarPDF('${ev.id}')">📄 PDF</button></div>`;}).join('');
+    html+=`<div class="client-card">
+      <div class="client-hdr" onclick="toggleHist('${cid}')">
+        <div class="c-avatar">${ini}</div>
+        <div style="flex:1"><div class="c-name">${c.nome}</div><div class="c-meta">${c.signo||'signo não informado'}</div></div>
+        <span style="color:var(--text3);font-size:20px">▾</span>
+      </div>
+      <div class="c-stats">
+        <div class="c-stat"><b>${c.evs.length}</b> atendimento${c.evs.length>1?'s':''}</div>
+        <div class="c-stat">Último: <b>${parseInt(ld)} ${months[parseInt(lm)-1].slice(0,3)}</b></div>
+        ${c.total>0?`<div class="c-stat">Total: <b>${fmtR(c.total)}</b></div>`:''}
+        ${c.pago>0?`<div class="c-stat">Pago: <b style="color:#00c880">${fmtR(c.pago)}</b></div>`:''}
+      </div>
+      <div class="c-actions"><button class="c-btn" onclick="window.open('https://wa.me/?text=${wb}','_blank')">📱 WhatsApp</button></div>
+      <div class="hist-box" id="${cid}">${histH}</div>
+    </div>`;
+  });document.getElementById('clientes-content').innerHTML=html;
+}
+function toggleHist(id){const el=document.getElementById(id);if(el) el.classList.toggle('open');}
+
+/* PUBLICAÇÕES */
+function openPubModal(){
+  ['pub-titulo','pub-desc','pub-link'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('pub-data').value=new Date().toISOString().split('T')[0];
+  document.getElementById('pub-cat').value='Trânsito';
+  document.getElementById('modal-pub').classList.add('open');
+}
+function closePubModal(){document.getElementById('modal-pub').classList.remove('open');}
+function savePub(){
+  const titulo=document.getElementById('pub-titulo').value.trim();if(!titulo) return;
+  const imgFile=document.getElementById('pub-img-file').files[0];
+  const pub={id:Date.now().toString(),titulo,cat:document.getElementById('pub-cat').value,data:document.getElementById('pub-data').value,desc:document.getElementById('pub-desc').value.trim(),link:document.getElementById('pub-link').value.trim(),img:''};
+  if(imgFile){const reader=new FileReader();reader.onload=e=>{pub.img=e.target.result;pubs.unshift(pub);savePubs();closePubModal();renderPublicacoes();};reader.readAsDataURL(imgFile);}
+  else{pubs.unshift(pub);savePubs();closePubModal();renderPublicacoes();}
+}
+function renderPublicacoes(){
+  const filtro=document.getElementById('pub-filtro').value;
+  const list=pubs.filter(p=>!filtro||p.cat===filtro);
+  if(!list.length){document.getElementById('pub-grid').innerHTML=`<p style="color:var(--text3);font-style:italic;font-size:17px;grid-column:1/-1;padding:24px 0">Nenhuma publicação encontrada.</p>`;return;}
+  document.getElementById('pub-grid').innerHTML=list.map(p=>`<div class="pub-card">
+    <div class="pub-img-wrap">${p.img?`<img src="${p.img}" alt="${p.titulo}">`:(p.link?`<a href="${p.link}" target="_blank" style="font-size:32px;text-decoration:none">🎨</a>`:'📸')}</div>
+    <div class="pub-body">
+      <div class="pub-tag">${p.cat}</div>
+      <div class="pub-title">${p.titulo}</div>
+      <div class="pub-date">${p.data?fmtDate(p.data):''}</div>
+      ${p.desc?`<div style="font-size:13px;color:var(--text3);margin-top:4px;font-style:italic;line-height:1.5">${p.desc.slice(0,80)}${p.desc.length>80?'…':''}</div>`:''}
+      ${p.link?`<a href="${p.link}" target="_blank" style="font-size:12px;color:var(--c-sibilla);display:block;margin-top:5px">↗ Ver no Canva</a>`:''}
+    </div>
+    <button class="pub-del" onclick="deletePub('${p.id}')">✕ remover</button>
+  </div>`).join('');
+}
+function deletePub(id){pubs=pubs.filter(p=>p.id!==id);savePubs();renderPublicacoes();}
+
+/* TRÂNSITOS */
+let selectedAspectBtn='';
+function selectAspect(name,symbol){
+  selectedAspectBtn=name;
+  document.getElementById('tr-aspecto').value=symbol+' '+name;
+  document.querySelectorAll('.asp-btn').forEach(b=>b.classList.remove('active'));
+  event.target.closest('.asp-btn').classList.add('active');
+  // auto-fill title hint
+  const p1=document.getElementById('tr-planeta').value;
+  const p2=document.getElementById('tr-planeta2').value;
+  const sig=document.getElementById('tr-signo').value;
+  if(!document.getElementById('tr-titulo').value){
+    let t=p1;if(symbol) t+=` ${symbol}`;if(p2) t+=` ${p2}`;if(sig) t+=` em ${sig}`;
+    document.getElementById('tr-titulo').value=t;
+  }
+}
+function openTransitModal(){
+  ['tr-titulo','tr-desc','tr-signo'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('tr-planeta2').value='';document.getElementById('tr-aspecto').value='';
+  document.getElementById('tr-ini').value=selectedDay||new Date().toISOString().split('T')[0];
+  document.getElementById('tr-fim').value='';document.getElementById('tr-cor').value='#f0c040';
+  document.querySelectorAll('.asp-btn').forEach(b=>b.classList.remove('active'));
+  selectedAspectBtn='';document.getElementById('modal-tr').classList.add('open');
+}
+function closeTransitModal(){document.getElementById('modal-tr').classList.remove('open');}
+function saveTransit(){
+  const titulo=document.getElementById('tr-titulo').value.trim(),dateIni=document.getElementById('tr-ini').value;
+  if(!titulo||!dateIni) return;
+  transits.push({id:Date.now().toString(),titulo,dateIni,dateFim:document.getElementById('tr-fim').value,planeta:document.getElementById('tr-planeta').value,planeta2:document.getElementById('tr-planeta2').value,aspecto:document.getElementById('tr-aspecto').value,signo:document.getElementById('tr-signo').value,cor:document.getElementById('tr-cor').value,desc:document.getElementById('tr-desc').value.trim()});
+  saveTr();closeTransitModal();if(calView==='mes') renderCalendar(); else renderWeek();if(selectedDay) renderDayPanel(selectedDay);renderTransitos();
+}
+function renderTransitos(){
+  const fpla=document.getElementById('tr-filtro').value;
+  const fasp=document.getElementById('tr-asp-filtro').value;
+  let list=[...transits].filter(t=>{
+    if(fpla&&t.planeta!==fpla) return false;
+    if(fasp&&!t.aspecto.includes(fasp)) return false;
+    return true;
+  }).sort((a,b)=>a.dateIni.localeCompare(b.dateIni));
+  if(!list.length){document.getElementById('transitos-list').innerHTML=`<div class="no-ev">Nenhum trânsito encontrado.</div>`;return;}
+  document.getElementById('transitos-list').innerHTML=list.map(t=>`
+    <div style="display:flex;align-items:flex-start;gap:14px;padding:15px 19px;background:var(--card);border:1px solid var(--bsoft);border-left:5px solid ${t.cor||'var(--gold)'};border-radius:12px;margin-bottom:10px;box-shadow:0 2px 8px var(--shadow);">
+      <div style="min-width:40px;text-align:center;">
+        <div style="font-size:24px">${t.planeta}</div>
+        ${t.planeta2?`<div style="font-size:10px;color:var(--text3)">${t.planeta2}</div>`:''}
+      </div>
+      <div style="flex:1">
+        <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;color:var(--text3);margin-bottom:3px">${fmtDate(t.dateIni)}${t.dateFim?' → '+fmtDate(t.dateFim):''}</div>
+        ${t.aspecto?`<div style="font-size:13px;color:${t.cor||'var(--gold)'};font-family:'Cinzel',serif;letter-spacing:1px;margin-bottom:3px">${t.aspecto}</div>`:''}
+        <div style="font-size:19px;color:var(--text);font-weight:500">${t.titulo}${t.signo?` — ${t.signo}`:''}</div>
+        ${t.desc?`<div style="font-size:16px;color:var(--text2);font-style:italic;margin-top:4px;line-height:1.5">${t.desc}</div>`:''}
+      </div>
+      <button class="btn-icon" onclick="deleteTr('${t.id}')">✕</button>
+    </div>`).join('');
+}
+function deleteTr(id){transits=transits.filter(t=>t.id!==id);saveTr();renderTransitos();if(calView==='mes') renderCalendar(); else renderWeek();}
+
+/* SERVIÇOS */
+function renderServicos(){
+  const g=document.getElementById('svc-grid');
+  if(!services.length){g.innerHTML=`<p style="color:var(--text3);font-style:italic;font-size:17px;grid-column:1/-1">Nenhum serviço cadastrado.</p>`;return;}
+  g.innerHTML=services.map(s=>`<div class="svc-card" style="border-left-color:${s.cor||'#00c880'}">
+    <button class="svc-del" onclick="deleteSvc('${s.id}')">✕</button>
+    <div class="svc-name">${s.nome}</div>
+    <div class="svc-valor">${fmtR(s.valor)}</div>
+  </div>`).join('');
+}
+function addService(){
+  const n=document.getElementById('s-nome').value.trim();if(!n) return;
+  services.push({id:Date.now().toString(),nome:n,valor:document.getElementById('s-valor').value||'0',cor:document.getElementById('s-cor').value});
+  saveSvc();['s-nome','s-valor'].forEach(i=>document.getElementById(i).value='');renderServicos();populateSvc();
+}
+function deleteSvc(id){services=services.filter(s=>s.id!==id);saveSvc();renderServicos();populateSvc();}
+
+/* FINANCEIRO */
+function renderFinanceiro(){
+  const periodo=document.getElementById('r-periodo').value,now=new Date();
+  const evs=events.filter(e=>{
+    if(periodo==='mes'){const[y,m]=e.date.split('-');return parseInt(m)===now.getMonth()+1&&parseInt(y)===now.getFullYear();}
+    if(periodo==='ano'){const[y]=e.date.split('-');return parseInt(y)===now.getFullYear();}
+    return true;
+  });
+  const fat=evs.reduce((s,e)=>s+parseFloat(e.valor||0),0);
+  const pago=evs.filter(e=>e.status==='pago').reduce((s,e)=>s+parseFloat(e.valor||0),0);
+  const pend=evs.filter(e=>e.status==='pendente').reduce((s,e)=>s+parseFloat(e.valor||0),0);
+  const parcial=evs.filter(e=>e.status==='parcial').reduce((s,e)=>s+parseFloat(e.valor||0),0);
+  document.getElementById('fin-stats').innerHTML=`
+    <div class="fin-card"><span class="fin-icon">🌙</span><span class="fin-num">${evs.length}</span><div class="fin-lbl">Atendimentos</div></div>
+    <div class="fin-card"><span class="fin-icon">💛</span><span class="fin-num">R$${fat.toFixed(0)}</span><div class="fin-lbl">Faturamento total</div></div>
+    <div class="fin-card"><span class="fin-icon">✅</span><span class="fin-num" style="color:#00c880">R$${pago.toFixed(0)}</span><div class="fin-lbl">Recebido</div></div>
+    <div class="fin-card"><span class="fin-icon">⏳</span><span class="fin-num" style="color:#ffb020">R$${pend.toFixed(0)}</span><div class="fin-lbl">Pendente</div></div>
+    <div class="fin-card"><span class="fin-icon">🔄</span><span class="fin-num" style="color:#b060ff">R$${parcial.toFixed(0)}</span><div class="fin-lbl">Parcial</div></div>`;
+  // por serviço
+  const byT={};evs.forEach(e=>{if(e.tipo){byT[e.tipo]=(byT[e.tipo]||0)+parseFloat(e.valor||0);}});
+  const te=Object.entries(byT).sort((a,b)=>b[1]-a[1]);const mx=te[0]?te[0][1]:1;
+  document.getElementById('fat-bar').innerHTML=te.length?te.map(([t,v])=>`<div class="bar-item">
+    <div class="bar-lbl" style="color:${svcColor(t)}">${t}</div>
+    <div class="bar-track"><div class="bar-fill" style="width:${(v/mx*100).toFixed(1)}%;background:${svcColor(t)}"></div></div>
+    <div class="bar-val">${fmtR(v)}</div></div>`).join(''):`<p style="color:var(--text3);font-style:italic;font-size:16px">Sem dados.</p>`;
+  // por forma de pagamento
+  const byF={};evs.forEach(e=>{if(e.forma){const k=e.forma==='Cartão de Crédito'&&e.bandeira?`Cartão ${e.bandeira}`:e.forma||'Outro';byF[k]=(byF[k]||0)+parseFloat(e.valor||0);}});
+  const fe=Object.entries(byF).sort((a,b)=>b[1]-a[1]);const mxf=fe[0]?fe[0][1]:1;
+  document.getElementById('forma-bar').innerHTML=fe.length?fe.map(([f,v])=>`<div class="bar-item">
+    <div class="bar-lbl">${f}</div>
+    <div class="bar-track"><div class="bar-fill" style="width:${(v/mxf*100).toFixed(1)}%;background:var(--c-sibilla)"></div></div>
+    <div class="bar-val">${fmtR(v)}</div></div>`).join(''):`<p style="color:var(--text3);font-style:italic;font-size:16px">Sem dados.</p>`;
+  // por signo
+  const signs={};evs.forEach(e=>{if(e.signo){signs[e.signo]=(signs[e.signo]||0)+1;}});
+  const se=Object.entries(signs).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('sign-grid').innerHTML=se.length?se.map(([s,c])=>`
+    <div style="padding:13px;background:var(--card);border:1px solid var(--bsoft);border-radius:10px;display:flex;align-items:center;gap:9px;box-shadow:0 1px 5px var(--shadow);">
+      <span style="font-size:24px">${s.split(' ')[0]}</span>
+      <div><div style="font-size:17px;color:var(--text);font-weight:500">${s.split(' ').slice(1).join(' ')}</div>
+      <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--gold)">${c} atend.</div></div>
+    </div>`).join(''):`<p style="color:var(--text3);font-style:italic;font-size:16px">Nenhum signo registrado.</p>`;
+}
+
+/* ── EDIÇÃO DE ATENDIMENTO ── */
+let editingId=null;
+
+function openEditModal(id){
+  const ev=events.find(e=>e.id===id);if(!ev) return;
+  editingId=id;
+
+  // Switch modal to edit mode
+  document.getElementById('modal-title').textContent='✏️ Editar Atendimento';
+  document.getElementById('modal-save-btn').textContent='✦ Salvar Alterações';
+  document.getElementById('modal-save-btn').onclick=updateEvent;
+
+  // Fill all fields
+  document.getElementById('f-data').value=ev.date||'';
+  document.getElementById('f-hora').value=ev.hora||'';
+  document.getElementById('f-nome').value=ev.nome||'';
+  document.getElementById('f-dur').value=ev.dur||'60';
+  document.getElementById('f-valor').value=ev.valor||'';
+  document.getElementById('f-status').value=ev.status||'pendente';
+  document.getElementById('f-forma').value=ev.forma||'';
+  document.getElementById('f-signo').value=ev.signo||'';
+  document.getElementById('f-slua').value=ev.slua||'';
+  document.getElementById('f-asc').value=ev.asc||'';
+  document.getElementById('f-obs').value=ev.obs||'';
+
+  // Cartão fields
+  const isCC=ev.forma==='Cartão de Crédito';
+  document.getElementById('cc-fields').style.display=isCC?'block':'none';
+  if(isCC){
+    document.getElementById('f-bandeira').value=ev.bandeira||'';
+    document.getElementById('f-parcelas').value=ev.parcelas||'1';
+    document.getElementById('f-portador').value=ev.portador||'';
+  }
+
+  // Populate service select then set value
+  populateSvc();
+  document.getElementById('f-tipo').value=ev.tipo||'';
+  document.getElementById('ac-box').style.display='none';
+  document.getElementById('modal').classList.add('open');
+}
+
+function updateEvent(){
+  if(!editingId) return;
+  const idx=events.findIndex(e=>e.id===editingId);if(idx===-1) return;
+  const nome=document.getElementById('f-nome').value.trim();
+  const data=document.getElementById('f-data').value;
+  if(!nome||!data) return;
+
+  events[idx]={
+    ...events[idx],
+    nome, date:data,
+    hora:document.getElementById('f-hora').value,
+    tipo:document.getElementById('f-tipo').value,
+    dur:document.getElementById('f-dur').value,
+    valor:document.getElementById('f-valor').value,
+    status:document.getElementById('f-status').value,
+    forma:document.getElementById('f-forma').value,
+    bandeira:document.getElementById('f-bandeira').value,
+    parcelas:document.getElementById('f-parcelas').value,
+    portador:document.getElementById('f-portador').value,
+    signo:document.getElementById('f-signo').value,
+    slua:document.getElementById('f-slua').value,
+    asc:document.getElementById('f-asc').value,
+    obs:document.getElementById('f-obs').value.trim()
+  };
+  save();
+  closeModal();
+  selectedDay=data;
+  if(calView==='mes') renderCalendar(); else renderWeek();
+  renderDayPanel(data);
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  // Reset modal back to "new" mode
+  editingId=null;
+  document.getElementById('modal-title').textContent='✦ Novo Atendimento ✦';
+  document.getElementById('modal-save-btn').textContent='✦ Confirmar Atendimento';
+  document.getElementById('modal-save-btn').onclick=saveEvent;
+}
+
+/* ── CALENDÁRIO EDITORIAL ── */
+let edPosts = JSON.parse(localStorage.getItem('mdf4_edposts')||'[]');
+let edWeekStart = (()=>{const d=new Date();d.setDate(d.getDate()-d.getDay());return d;})();
+let editingEdId = null;
+const saveEdPosts = ()=>localStorage.setItem('mdf4_edposts',JSON.stringify(edPosts));
+
+const ED_STATUS_COLORS = {ideia:'#6366f1',producao:'#f59e0b',agendado:'#ec4899',publicado:'#10b981'};
+const ED_STATUS_LABELS = {ideia:'💡 Ideia',producao:'🔨 Em produção',agendado:'📅 Agendado',publicado:'✅ Publicado'};
+const ED_FORMAT_COLORS = {Feed:'#00d0f0',Story:'#f97316',Reels:'#a855f7',Carrossel:'#10b981'};
+
+function edChangeWeek(d){
+  const mode=document.getElementById('ed-mode').value;
+  if(mode==='semana'){edWeekStart=new Date(edWeekStart);edWeekStart.setDate(edWeekStart.getDate()+d*7);}
+  else{edWeekStart=new Date(edWeekStart);edWeekStart.setMonth(edWeekStart.getMonth()+d);}
+  renderEditorial();
+}
+
+function renderEditorial(){
+  const mode=document.getElementById('ed-mode').value;
+  if(mode==='semana') renderEdWeek(); else renderEdMonth();
+  renderEdList();
+}
+
+function renderEdWeek(){
+  const days=[];
+  for(let i=0;i<7;i++){const d=new Date(edWeekStart);d.setDate(d.getDate()+i);days.push(d);}
+  const s=days[0],e=days[6];
+  document.getElementById('ed-title').textContent=`${s.getDate()} ${months[s.getMonth()].slice(0,3)} — ${e.getDate()} ${months[e.getMonth()].slice(0,3)} ${e.getFullYear()}`;
+  const todayDS=toDS(new Date());
+  let html=`<div class="ed-week-grid">${wdays.map(d=>`<div class="ed-day-hdr">${d}</div>`).join('')}`;
+  html+=days.map(d=>{
+    const ds=toDS(d),moon=getMoonPhase(ds),moonSign=MOON_SIGNS[ds]||'',moonEmoji=moonSign?SIGN_EMOJI[moonSign]||'':'';
+    const dayPosts=edPosts.filter(p=>p.data===ds);
+    const isT=ds===todayDS;
+    let inner=`<div class="ed-day-num"><span>${d.getDate()}</span><span class="ed-day-moon">${moon.e}</span></div>`;
+    if(moonSign) inner+=`<div style="font-size:9px;color:var(--text3);font-style:italic;margin-bottom:3px">${moonEmoji} ☽ ${moonSign}</div>`;
+    inner+=dayPosts.map(p=>`<div class="ed-post-chip" style="background:${ED_STATUS_COLORS[p.status]||'#6366f1'}" onclick="openEdModal('${p.id}');event.stopPropagation()" title="${p.titulo}">${p.formato?'['+p.formato+'] ':''} ${p.titulo.slice(0,18)}${p.titulo.length>18?'…':''}</div>`).join('');
+    inner+=`<div class="ed-add-hint">+</div>`;
+    return `<div class="ed-day-col${isT?' today-ed':''}" onclick="openEdModal(null,'${ds}')">${inner}</div>`;
+  }).join('');
+  html+='</div>';
+  document.getElementById('ed-grid').innerHTML=html;
+}
+
+function renderEdMonth(){
+  const y=edWeekStart.getFullYear(),m=edWeekStart.getMonth();
+  document.getElementById('ed-title').textContent=months[m]+' '+y;
+  const first=new Date(y,m,1).getDay(),total=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate();
+  const todayDS=toDS(new Date());
+  let html=`<div class="ed-month-grid">${wdays.map(d=>`<div class="ed-day-hdr">${d}</div>`).join('')}`;
+  for(let i=0;i<first;i++) html+=`<div class="ed-month-day other-m"><div style="font-size:12px;color:var(--text3)">${prev-first+i+1}</div></div>`;
+  for(let d=1;d<=total;d++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const moon=getMoonPhase(ds),isT=ds===todayDS;
+    const dayPosts=edPosts.filter(p=>p.data===ds);
+    const chips=dayPosts.slice(0,3).map(p=>`<div class="ed-post-chip" style="background:${ED_STATUS_COLORS[p.status]||'#6366f1'};font-size:9px;padding:2px 5px;" onclick="openEdModal('${p.id}');event.stopPropagation()">${p.titulo.slice(0,12)}…</div>`).join('');
+    html+=`<div class="ed-month-day${isT?' today-ed':''}" onclick="openEdModal(null,'${ds}')">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span style="font-family:'Cinzel',serif;color:var(--text)">${d}</span><span>${moon.e}</span></div>
+      ${chips}
+    </div>`;
+  }
+  for(let i=1;i<=42-first-total;i++) html+=`<div class="ed-month-day other-m"><div style="font-size:12px;color:var(--text3)">${i}</div></div>`;
+  html+='</div>';
+  document.getElementById('ed-grid').innerHTML=html;
+}
+
+function renderEdList(){
+  const sorted=[...edPosts].sort((a,b)=>a.data.localeCompare(b.data));
+  if(!sorted.length){document.getElementById('ed-list').innerHTML=`<div class="no-ev">Nenhum post registrado ainda.</div>`;return;}
+  const groups={};
+  sorted.forEach(p=>{const[y,m]=p.data.split('-');const k=months[parseInt(m)-1]+' '+y;if(!groups[k]) groups[k]=[];groups[k].push(p);});
+  let html='';
+  for(const[mo,posts] of Object.entries(groups)){
+    html+=`<div style="margin-bottom:24px"><div class="sec-ttl">${mo}</div>`;
+    posts.forEach(p=>{
+      const fmtColor=ED_FORMAT_COLORS[p.formato]||'var(--c-geral)';
+      const stColor=ED_STATUS_COLORS[p.status]||'#6366f1';
+      const stLabel=ED_STATUS_LABELS[p.status]||p.status;
+      const[,m,d]=p.data.split('-');
+      html+=`<div class="ed-post-card" style="border-left-color:${stColor}">
+        <div style="min-width:60px;text-align:center">
+          <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold)">${parseInt(d)} ${months[parseInt(m)-1].slice(0,3)}</div>
+          ${p.hora?`<div style="font-size:11px;color:var(--text3)">${p.hora}</div>`:''}
+          <div style="font-size:11px;margin-top:4px;padding:2px 6px;border-radius:4px;background:${fmtColor}22;color:${fmtColor};font-family:'Cinzel',serif">${p.formato||'Feed'}</div>
+        </div>
+        <div class="ed-post-info">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap;">
+            <div class="ed-post-title">${p.titulo}</div>
+            <span class="ed-status-badge st-${p.status}">${stLabel}</span>
+          </div>
+          <div class="ed-post-meta">${p.cat||''}${p.formato?' · '+p.formato:''}</div>
+          ${p.copy?`<div class="ed-post-copy">${p.copy.slice(0,120)}${p.copy.length>120?'…':''}</div>`:''}
+          ${p.tags?`<div style="font-size:13px;color:var(--c-sibilla);margin-top:5px">${p.tags}</div>`:''}
+          ${p.canva?`<a href="${p.canva}" target="_blank" style="font-size:12px;color:var(--c-sibilla);display:block;margin-top:4px">↗ Ver no Canva</a>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <button class="btn-icon" onclick="openEdModal('${p.id}')" title="Editar" style="color:var(--gold2)">✏️</button>
+          <button class="btn-icon" onclick="deleteEdPost('${p.id}')" title="Remover">✕</button>
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+  document.getElementById('ed-list').innerHTML=html;
+}
+
+function openEdModal(id, preDate){
+  if(id){
+    // Edit mode
+    const p=edPosts.find(x=>x.id===id);if(!p) return;
+    editingEdId=id;
+    document.getElementById('ed-modal-title').textContent='✏️ Editar Post';
+    document.getElementById('ed-save-btn').textContent='✦ Salvar Alterações';
+    document.getElementById('ed-data').value=p.data||'';
+    document.getElementById('ed-hora').value=p.hora||'';
+    document.getElementById('ed-titulo').value=p.titulo||'';
+    document.getElementById('ed-cat').value=p.cat||'Trânsito';
+    document.getElementById('ed-formato').value=p.formato||'Feed';
+    document.getElementById('ed-status').value=p.status||'ideia';
+    document.getElementById('ed-copy').value=p.copy||'';
+    document.getElementById('ed-tags').value=p.tags||'';
+    document.getElementById('ed-canva').value=p.canva||'';
+  } else {
+    // New mode
+    editingEdId=null;
+    document.getElementById('ed-modal-title').textContent='✦ Novo Post ✦';
+    document.getElementById('ed-save-btn').textContent='✦ Salvar Post';
+    ['ed-titulo','ed-copy','ed-tags','ed-canva','ed-hora'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('ed-data').value=preDate||new Date().toISOString().split('T')[0];
+    document.getElementById('ed-cat').value='Trânsito';
+    document.getElementById('ed-formato').value='Feed';
+    document.getElementById('ed-status').value='ideia';
+  }
+  document.getElementById('modal-ed').classList.add('open');
+}
+function closeEdModal(){document.getElementById('modal-ed').classList.remove('open');editingEdId=null;}
+
+function saveEdPost(){
+  const titulo=document.getElementById('ed-titulo').value.trim();
+  const data=document.getElementById('ed-data').value;
+  if(!titulo||!data) return;
+  const post={
+    id:editingEdId||Date.now().toString(),
+    titulo,data,
+    hora:document.getElementById('ed-hora').value,
+    cat:document.getElementById('ed-cat').value,
+    formato:document.getElementById('ed-formato').value,
+    status:document.getElementById('ed-status').value,
+    copy:document.getElementById('ed-copy').value.trim(),
+    tags:document.getElementById('ed-tags').value.trim(),
+    canva:document.getElementById('ed-canva').value.trim()
+  };
+  if(editingEdId){
+    const idx=edPosts.findIndex(p=>p.id===editingEdId);
+    if(idx>-1) edPosts[idx]=post;
+  } else {
+    edPosts.push(post);
+  }
+  saveEdPosts();closeEdModal();renderEditorial();
+}
+function deleteEdPost(id){edPosts=edPosts.filter(p=>p.id!==id);saveEdPosts();renderEditorial();}
+
+/* ── BACKUP & GOOGLE DRIVE ── */
+
+// ── Collect all data ──
+function getAllData(){
+  return{
+    version:'4.0',
+    exportedAt:new Date().toISOString(),
+    events, services, blocked, transits, pubs, edPosts,
+    meta: localStorage.getItem('mdf4_meta')||'0'
+  };
+}
+
+// ── Restore all data ──
+function restoreData(d){
+  if(d.events)   { events=d.events;   save(); }
+  if(d.services) { services=d.services; saveSvc(); }
+  if(d.blocked)  { blocked=d.blocked;  saveBlk(); }
+  if(d.transits) { transits=d.transits; saveTr(); }
+  if(d.pubs)     { pubs=d.pubs;       savePubs(); }
+  if(d.edPosts)  { edPosts=d.edPosts; saveEdPosts(); }
+  if(d.meta)     localStorage.setItem('mdf4_meta', d.meta);
+  renderCalendar(); populateSvc();
+}
+
+// ── Export JSON ──
+function exportJSON(){
+  const data=getAllData();
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  const ts=new Date().toISOString().slice(0,10);
+  a.download=`mariana-agenda-${ts}.json`;
+  a.click();
+  // log to history
+  const hist=JSON.parse(localStorage.getItem('mdf4_backupHist')||'[]');
+  hist.unshift({ts:new Date().toISOString(),tipo:'Exportação JSON manual',counts:{ev:events.length,cli:[...new Set(events.map(e=>e.nome))].length}});
+  if(hist.length>20) hist.pop();
+  localStorage.setItem('mdf4_backupHist',JSON.stringify(hist));
+  document.getElementById('import-msg').textContent='✦ JSON exportado com sucesso!';
+  renderBackup();
+}
+
+// ── Import JSON ──
+function importJSON(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      restoreData(d);
+      const hist=JSON.parse(localStorage.getItem('mdf4_backupHist')||'[]');
+      hist.unshift({ts:new Date().toISOString(),tipo:'Importação JSON',counts:{ev:(d.events||[]).length}});
+      localStorage.setItem('mdf4_backupHist',JSON.stringify(hist));
+      document.getElementById('import-msg').textContent='✦ Dados restaurados com sucesso! '+events.length+' atendimentos carregados.';
+      renderBackup();
+    }catch(err){
+      document.getElementById('import-msg').textContent='⚠ Erro: arquivo inválido ou corrompido.';
+    }
+  };
+  reader.readAsText(file);
+  input.value='';
+}
+
+// ── Auto-backup on page unload ──
+window.addEventListener('beforeunload',()=>{
+  try{
+    const data=getAllData();
+    localStorage.setItem('mdf4_autobackup', JSON.stringify(data));
+    localStorage.setItem('mdf4_autobackup_ts', new Date().toISOString());
+  }catch(e){}
+});
+
+// ── Render backup view ──
+function renderBackup(){
+  // Status bar
+  const gdUser=localStorage.getItem('mdf4_gd_user');
+  const lastAuto=localStorage.getItem('mdf4_autobackup_ts');
+  const lastGD=localStorage.getItem('mdf4_gd_last_save');
+  let statusMsg='Dados salvos localmente no navegador';
+  let statusSub=lastAuto?'Último backup automático: '+new Date(lastAuto).toLocaleString('pt-BR'):'Nenhum backup automático ainda';
+  let statusIcon='💾';
+  if(gdUser&&lastGD){statusMsg='Sincronizado com Google Drive';statusSub='Última sincronização: '+new Date(lastGD).toLocaleString('pt-BR');statusIcon='☁️';}
+  document.getElementById('backup-status-icon').textContent=statusIcon;
+  document.getElementById('backup-status-msg').textContent=statusMsg;
+  document.getElementById('backup-status-sub').textContent=statusSub;
+
+  // Summary
+  const clientes=[...new Set(events.map(e=>e.nome))].length;
+  document.getElementById('backup-summary').innerHTML=`
+    🌙 <b style="color:var(--gold)">${events.length}</b> atendimentos registrados<br>
+    👥 <b style="color:var(--gold)">${clientes}</b> clientes cadastradas<br>
+    ⭐ <b style="color:var(--gold)">${transits.length}</b> trânsitos<br>
+    📝 <b style="color:var(--gold)">${edPosts.length}</b> posts editoriais<br>
+    📸 <b style="color:var(--gold)">${pubs.length}</b> publicações`;
+
+  // History
+  const hist=JSON.parse(localStorage.getItem('mdf4_backupHist')||'[]');
+  const histEl=document.getElementById('backup-history');
+  if(!hist.length){histEl.innerHTML='<span style="color:var(--text3);font-style:italic">Nenhum backup realizado ainda.</span>';return;}
+  histEl.innerHTML=hist.map(h=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--bsoft);">
+      <span style="font-size:16px">${h.tipo.includes('Drive')?'☁️':h.tipo.includes('Import')? '⬆':'⬇'}</span>
+      <div style="flex:1">
+        <div style="font-size:15px;color:var(--text)">${h.tipo}</div>
+        <div style="font-size:13px;color:var(--text3)">${new Date(h.ts).toLocaleString('pt-BR')}${h.counts?' · '+h.counts.ev+' atendimentos':''}</div>
+      </div>
+    </div>`).join('');
+
+  // Google Drive UI
+  const gdInfo=JSON.parse(localStorage.getItem('mdf4_gd_info')||'null');
+  if(gdInfo&&gdInfo.email){
+    document.getElementById('gd-auth-area').style.display='none';
+    document.getElementById('gd-connected-area').style.display='block';
+    document.getElementById('gd-user-name').textContent=gdInfo.name||'Conta Google';
+    document.getElementById('gd-user-email').textContent=gdInfo.email;
+  } else {
+    document.getElementById('gd-auth-area').style.display='block';
+    document.getElementById('gd-connected-area').style.display='none';
+  }
+}
+
+// ── GOOGLE DRIVE via Google Identity Services + Drive API ──
+const GD_CLIENT_ID = 'COLE_SEU_CLIENT_ID_AQUI';
+const GD_SCOPES = 'https://www.googleapis.com/auth/drive.file';
+const GD_FILE_NAME = 'mariana-agenda.json';
+let gdToken = null;
+let gdFileId = localStorage.getItem('mdf4_gd_fileId')||null;
+
+function gdSignIn(){
+  if(typeof google==='undefined'){
+    gdShowMsg('⚠ API do Google não carregada. Verifique sua conexão e adicione seu Client ID.');
+    return;
+  }
+  google.accounts.oauth2.initTokenClient({
+    client_id: GD_CLIENT_ID,
+    scope: GD_SCOPES,
+    callback:(resp)=>{
+      if(resp.error){gdShowMsg('⚠ Erro ao conectar: '+resp.error);return;}
+      gdToken=resp.access_token;
+      // Get user info
+      fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+gdToken}})
+        .then(r=>r.json()).then(info=>{
+          const gdInfo={email:info.email,name:info.name||info.email};
+          localStorage.setItem('mdf4_gd_info',JSON.stringify(gdInfo));
+          localStorage.setItem('mdf4_gd_token_ts',new Date().toISOString());
+          renderBackup();
+          gdShowMsg('✦ Conectado como '+gdInfo.email);
+        });
+    }
+  }).requestAccessToken();
+}
+
+function gdSignOut(){
+  gdToken=null;gdFileId=null;
+  localStorage.removeItem('mdf4_gd_info');
+  localStorage.removeItem('mdf4_gd_fileId');
+  localStorage.removeItem('mdf4_gd_last_save');
+  renderBackup();
+}
+
+async function gdEnsureToken(){
+  if(gdToken) return true;
+  // Try silent refresh
+  return new Promise(resolve=>{
+    if(typeof google==='undefined'){resolve(false);return;}
+    try{
+      google.accounts.oauth2.initTokenClient({
+        client_id:GD_CLIENT_ID,scope:GD_SCOPES,prompt:'',
+        callback:(resp)=>{
+          if(resp.error){resolve(false);return;}
+          gdToken=resp.access_token;resolve(true);
+        }
+      }).requestAccessToken({prompt:''});
+    }catch(e){resolve(false);}
+  });
+}
+
+async function gdSave(){
+  gdShowMsg('Salvando no Drive...');
+  const ok=await gdEnsureToken();
+  if(!ok){gdShowMsg('⚠ Reconecte sua conta Google para salvar.');return;}
+  const content=JSON.stringify(getAllData(),null,2);
+  const blob=new Blob([content],{type:'application/json'});
+  try{
+    if(gdFileId){
+      // Update existing file
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${gdFileId}?uploadType=media`,{
+        method:'PATCH',headers:{Authorization:'Bearer '+gdToken,'Content-Type':'application/json'},body:blob
+      });
+    } else {
+      // Search for existing file first
+      const search=await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${GD_FILE_NAME}'+and+trashed=false&fields=files(id,name)`,{headers:{Authorization:'Bearer '+gdToken}});
+      const sr=await search.json();
+      if(sr.files&&sr.files.length>0){
+        gdFileId=sr.files[0].id;localStorage.setItem('mdf4_gd_fileId',gdFileId);
+        await fetch(`https://www.googleapis.com/upload/drive/v3/files/${gdFileId}?uploadType=media`,{
+          method:'PATCH',headers:{Authorization:'Bearer '+gdToken,'Content-Type':'application/json'},body:blob
+        });
+      } else {
+        // Create new file
+        const meta=JSON.stringify({name:GD_FILE_NAME,mimeType:'application/json'});
+        const form=new FormData();
+        form.append('metadata',new Blob([meta],{type:'application/json'}));
+        form.append('file',blob);
+        const cr=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{
+          method:'POST',headers:{Authorization:'Bearer '+gdToken},body:form
+        });
+        const cj=await cr.json();
+        gdFileId=cj.id;localStorage.setItem('mdf4_gd_fileId',gdFileId);
+      }
+    }
+    const ts=new Date().toISOString();
+    localStorage.setItem('mdf4_gd_last_save',ts);
+    const hist=JSON.parse(localStorage.getItem('mdf4_backupHist')||'[]');
+    hist.unshift({ts,tipo:'Salvo no Google Drive',counts:{ev:events.length}});
+    if(hist.length>20) hist.pop();
+    localStorage.setItem('mdf4_backupHist',JSON.stringify(hist));
+    gdShowMsg('✦ Salvo no Google Drive em '+new Date(ts).toLocaleString('pt-BR'));
+    renderBackup();
+  }catch(e){gdShowMsg('⚠ Erro ao salvar: '+e.message);}
+}
+
+async function gdLoad(){
+  gdShowMsg('Carregando do Drive...');
+  const ok=await gdEnsureToken();
+  if(!ok){gdShowMsg('⚠ Reconecte sua conta Google para carregar.');return;}
+  try{
+    let fid=gdFileId;
+    if(!fid){
+      const search=await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${GD_FILE_NAME}'+and+trashed=false&fields=files(id)`,{headers:{Authorization:'Bearer '+gdToken}});
+      const sr=await search.json();
+      if(!sr.files||!sr.files.length){gdShowMsg('⚠ Nenhum arquivo encontrado no Drive.');return;}
+      fid=sr.files[0].id;gdFileId=fid;localStorage.setItem('mdf4_gd_fileId',fid);
+    }
+    const res=await fetch(`https://www.googleapis.com/drive/v3/files/${fid}?alt=media`,{headers:{Authorization:'Bearer '+gdToken}});
+    const d=await res.json();
+    restoreData(d);
+    const hist=JSON.parse(localStorage.getItem('mdf4_backupHist')||'[]');
+    hist.unshift({ts:new Date().toISOString(),tipo:'Carregado do Google Drive',counts:{ev:(d.events||[]).length}});
+    if(hist.length>20) hist.pop();
+    localStorage.setItem('mdf4_backupHist',JSON.stringify(hist));
+    gdShowMsg('✦ Dados carregados do Drive! '+events.length+' atendimentos restaurados.');
+    renderBackup();
+  }catch(e){gdShowMsg('⚠ Erro ao carregar: '+e.message);}
+}
+
+function gdShowMsg(msg){ const el=document.getElementById('gd-msg');if(el) el.textContent=msg; }
+
+// ── Auto-save to Drive every 10 min if connected ──
+setInterval(async ()=>{
+  const gdInfo=JSON.parse(localStorage.getItem('mdf4_gd_info')||'null');
+  if(gdInfo&&gdInfo.email&&gdToken){
+    await gdSave();
+  }
+}, 10 * 60 * 1000);
+
+// ── Restore auto-backup hint on load ──
+(function checkAutoBackup(){
+  const lastAuto=localStorage.getItem('mdf4_autobackup_ts');
+  if(!lastAuto) return;
+  const age=(new Date()-new Date(lastAuto))/1000/60; // minutes
+  if(age<5) return; // recent, no need to alert
+})();
+
+/* INIT */
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+document.getElementById('modal-tr').addEventListener('click',e=>{if(e.target===document.getElementById('modal-tr'))closeTransitModal();});
+document.getElementById('modal-pub').addEventListener('click',e=>{if(e.target===document.getElementById('modal-pub'))closePubModal();});
+document.getElementById('modal-ed').addEventListener('click',e=>{if(e.target===document.getElementById('modal-ed'))closeEdModal();});
+document.getElementById('f-nome').addEventListener('blur',()=>setTimeout(()=>document.getElementById('ac-box').style.display='none',200));
+renderCalendar();populateSvc();
+</script>
+<!-- Google Identity Services — necessário para o Google Drive -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</body>
+</html>
